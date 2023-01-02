@@ -1,0 +1,15 @@
+# MACOS 
+**/.DS_Store
+
+# VSCODE
+.vscode 
+
+# DJANGO
+.mypy_cache/ 
+*.log
+*.pot
+*.pyc
+__pycache__
+db.sqlite3
+
+.env
