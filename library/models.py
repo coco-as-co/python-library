@@ -1,10 +1,13 @@
 from django.db import models
+from django.conf import settings
+
+USER = settings.AUTH_USER_MODEL
 
 # LIBRARY
 
 
 class Library(models.Model):
-    # owner = models.ForeignKey(User)
+    owner = models.ForeignKey(USER, on_delete=models.CASCADE)
     name = models.CharField(max_length=80)
     city = models.CharField(max_length=80)
     address = models.CharField(max_length=80)
@@ -45,7 +48,7 @@ class Salon(models.Model):
 
 
 class Message(models.Model):
-    # user = models.ForeignKey(User)
+    user = models.ForeignKey(USER, on_delete=models.SET_NULL, null=True)
     salon = models.ForeignKey(Salon, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -55,14 +58,14 @@ class Message(models.Model):
 
 
 class Group(models.Model):
-    # owner = models.ForeignKey(User)
+    owner = models.ForeignKey(USER, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=80)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
 
 class User_Group(models.Model):
-    # user = models.ForeignKey(User)
+    user = models.ForeignKey(USER, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     isActive = models.BooleanField(max_length=80, default=False)
     created_at = models.DateTimeField(auto_now_add=True)
