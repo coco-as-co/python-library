@@ -1,6 +1,6 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.contrib.auth import login, authenticate
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, HttpResponseNotFound
+from django.contrib import messages
 from .forms import SignUpForm
 
 
@@ -12,12 +12,16 @@ def register(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
+            messages.success(request, 'Account created successfully')
+
+            return redirect('login')
     else:
         form = SignUpForm()
 
     context = {'form': form}
     return render(request, 'registration/register.html', context)
+
+def home(request):
+    if request.user.is_authenticated:
+        return render(request, 'library/home.html')
+    return HttpResponseNotFound('<h1>Page not found</h1>')
