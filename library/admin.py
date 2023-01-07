@@ -1,6 +1,5 @@
 from django.contrib import admin
 
-from .models import Genre, Library
+from .models import Library
 
-admin.site.register(Genre)
 admin.site.register(Library)
