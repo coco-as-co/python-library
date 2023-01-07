@@ -32,6 +32,8 @@ td{
             <th>Image</th>
             <th>Durée maximum emprunt</th>
             <th>Library</th>
+            <th>Edition</th>
+            <th>Suppression</th>
         </tr>
         {% for book in books %}
         <tr>
@@ -46,7 +48,8 @@ td{
             {% endif %}
             <td>{{ book.duration_max }}</td>
             <td>{{ book.library }}</td>
-            
+            <td><a href="{% url 'editBook' book.id %}">Editer</a></td>
+            <td><a href="{% url 'deleteBook' book.id %}">Supprimer</a></td>
         </tr>
         {% endfor %}
     </table>

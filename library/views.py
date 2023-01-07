@@ -47,3 +47,30 @@ def addBook(request):
         context = {'form': form}
         return render(request, 'library/addBook.html',context)
     return HttpResponseNotFound('<h1>Page not found</h1>')
+
+def editBook(request, id):
+    if request.user.is_authenticated:
+        book = Book.objects.get(id=id)
+        if request.method == 'POST':
+            form = AddBookForm(request.POST,request.FILES,instance=book)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Book updated successfully')
+
+                return redirect('book')
+        else:
+            form = AddBookForm(instance=book)
+        
+        context = {'form': form}
+        return render(request, 'library/editBook.html',context)
+    return HttpResponseNotFound('<h1>Page not found</h1>')
+
+def deleteBook(request, id):
+    if request.user.is_authenticated:
+        book = Book.objects.get(id=id)
+        book.delete()
+        messages.success(request, 'Book deleted successfully')
+
+        return redirect('book')
+    return HttpResponseNotFound('<h1>Page not found</h1>')
+
