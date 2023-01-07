@@ -1,0 +1,60 @@
+{% extends "../base.html" %}
+
+{% block title %}Book{% endblock %}
+{%  load static %}
+<style>
+table{
+  border-collapse: collapse
+}
+
+td{
+  border: 1px solid black;
+  padding: 10px;
+}
+</style>
+
+{% block content %}
+{% if form.errors %}
+
+{% endif %}
+
+<h2>Page Book</h2><h3>User : {{ user.username }}</h3>
+
+
+    <!-- table html -->
+    <table>
+        <tr>
+            <th>Titre</th>
+            <th>Auteur</th>
+            <th>Editeur</th>
+            <th>Collection</th>
+            <th>Genre</th>
+            <th>Image</th>
+            <th>Durée maximum emprunt</th>
+            <th>Library</th>
+        </tr>
+        {% for book in books %}
+        <tr>
+            
+            <td>{{ book.title }}</td>
+            <td>{{ book.author }}</td>
+            <td>{{ book.editor }}</td>
+            <td>{{ book.collection }}</td>
+            <td>{{ book.genre }}</td>
+            {% if book.jacket %}
+            <td><img src="{{ book.jacket.url }}" width="30px"> </td>
+            {% endif %}
+            <td>{{ book.duration_max }}</td>
+            <td>{{ book.library }}</td>
+            
+        </tr>
+        {% endfor %}
+    </table>
+
+   
+
+
+<a href="{% url 'addBook' %}">Ajouter un livre</a>
+<a href="{% url 'logout' %}">Se déconnecter</a>
+
+{% endblock %}
