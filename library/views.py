@@ -79,7 +79,7 @@ def edit_library(request, library_id):
         else:
             form = LibraryForm(instance=library)
 
-        context = {'form': form}
+        context = {'form': form, 'name': library.name}
         return render(request, 'library/edit.html', context)
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
