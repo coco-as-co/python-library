@@ -4,31 +4,54 @@
 
 {% block content %}
 
-<div>
-  <h1>{{ library.name }}</h1>
-  {% if library.owner == user %}
-    <a href="{% url 'edit_library' library.id %}" class="btn btn-warning"><i class="bi bi-pencil"></i></a>
-    <a href="{% url 'delete_library' library.id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a>
-  {% endif %}
+<div class="mb-3 row">
+  <div class="col">
+    <h1>{{ library.name }}
+      {% if library.owner == user %}
+        <a href="{% url 'edit_library' library.id %}" class="btn btn-warning"><i class="bi bi-pencil"></i></a>
+        <a href="{% url 'delete_library' library.id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a>
+      {% endif %}
+    </h1>
+  </div>
 </div>
 
-<div>
-  <p>City : {{ library.city }}</p>
-  <p>Address : {{ library.address }}</p>
+<div class="card mb-3">
+  <div class="card-body">
+    <div class="card-text">
+      <p>Ville : {{ library.city }}</p>
+      <p>Adresse : {{ library.address }}</p>
+    </div>
+  </div>
 </div>
 
 <div>
   <div>
-    <h2>Books</h2>
-    {% if library.owner == user %}
-      <a href="#" class="btn btn-success"><i class="bi bi-plus-lg"></i></a>
-    {% endif %}
-  </div
-  <ul>
+    <h2>Livres
+      {% if library.owner == user %}
+        <a href="#" class="btn btn-success"><i class="bi bi-plus-lg"></i></a>
+      {% endif %}
+    </h2>
+  </div>
+  <div class="row row-cols-4">
     {% for book in library.books %}
-      <li>{{ book.title }}</li>
+      <div class="col">
+          <div class="card">
+              <div class="card-body">
+                  <h5 class="card-title">{{ book.title }}</h5>
+                  <p class="card-text">Auteur : {{ book.author }}</p>
+                  <p class="card-text">Editeur : {{ book.editor }}</p>
+                  <p class="card-text">Genre : {{ book.genre }}</p>
+                  <p class="card-text">Collection : {{ book.collection }}</p>
+                  <a href="#" class="btn btn-success">Voir</a>
+                  {% if library.owner == user %}
+                    <a href="#" class="btn btn-warning"><i class="bi bi-pencil"></i></a>
+                    <a href="#" class="btn btn-danger"><i class="bi bi-trash"></i></a>
+                  {% endif %}
+              </div>
+          </div>
+      </div>
     {% endfor %}
-  </ul>
+  </div>
 </div>
 
 {% endblock %}

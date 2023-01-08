@@ -7,11 +7,27 @@
 
 {% endif %}
 
-<h2>Se connecter</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Connexion</button>
-</form>
+<div class="card w-50 mx-auto">
+  <div class="card-header text-center">
+    <h1>Se connecter</h1>
+  </div>
+  <div class="card-body justify-content-center">
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="form-group mb-2">
+          <label for="{{ field.id_for_label }}">{{ field.label }} :</label>
+          {{ field }}
+        </div>
+      {% endfor %}
+      <div class="form-group mt-4 mb-2 text-center">
+        <button type="submit" class="btn btn-primary">Connexion</button>
+      </div>
+    </form>
+    <div class="w-100 text-center">
+      <small><a href="{% url 'register' %}">Pas encore de compte ?</a></small>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
