@@ -37,3 +37,12 @@ class BookForm(forms.ModelForm):
     
         
    
+
+class LibraryForm(forms.ModelForm):
+    name = forms.CharField(max_length=80)
+    city = forms.CharField(max_length=80)
+    address = forms.CharField(max_length=80)
+
+    class Meta:
+        model = Library
+        fields = ['name', 'city', 'address']

@@ -1,0 +1,26 @@
+{% extends '../base.html' %}
+
+{% block title %}Bibliothèques{% endblock %}
+
+{% block content %}
+
+{% if myLibraries %}
+    <h1>Mes bibliothèques</h1>
+    <a class="btn btn-primary">Créer une nouvelle bibliothèque</a>
+
+    <div>
+        {% for library in myLibraries %}
+            <li><a href="{% url 'detail_library' library.id %}">{{ library.name }}</a></li>
+        {% endfor %}
+    </div>
+{% else %}
+    <a href="{% url 'add_library' %}" class="btn btn-primary">Créer ma première bibliothèque</a>
+{% endif %}
+
+<h1>Bibliothèques</h1>
+
+{% for library in libraries %}
+    <li><a href="{% url 'detail_library' library.id %}">{{ library.name }}</a></li>
+{% endfor %}
+
+{% endblock %}
