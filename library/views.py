@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
 from django.contrib import messages
-from .forms import SignUpForm , AddBookForm , Book
+from .forms import SignUpForm , BookForm , Book
+from .models import Library
 
 
 def index(request):
@@ -34,15 +35,17 @@ def book(request):
 
 def addBook(request):
     if request.user.is_authenticated:
+        print('bla',request.user.id )
         if request.method == 'POST':
-            form = AddBookForm(request.POST,request.FILES)
+            
+            form = BookForm( request.POST,request.FILES,  )
             if form.is_valid():
                 form.save()
                 messages.success(request, 'Book added successfully')
 
                 return redirect('book')
         else:
-             form = AddBookForm()
+            form = BookForm(userId = request.user.id)
         
         context = {'form': form}
         return render(request, 'book/addBook.html',context)
@@ -52,14 +55,14 @@ def editBook(request, id):
     if request.user.is_authenticated:
         book = Book.objects.get(id=id)
         if request.method == 'POST':
-            form = AddBookForm(request.POST,request.FILES,instance=book)
+            form = BookForm(request.POST,request.FILES,instance=book,userId = request.user.id)
             if form.is_valid():
                 form.save()
                 messages.success(request, 'Book updated successfully')
 
                 return redirect('book')
         else:
-            form = AddBookForm(instance=book)
+            form = BookForm(instance=book,userId = request.user.id)
         
         context = {'form': form}
         return render(request, 'book/editBook.html',context)
