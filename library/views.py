@@ -29,7 +29,7 @@ def home(request):
 def book(request):
     if request.user.is_authenticated:
         books = Book.objects.all()
-        return render(request, 'library/book.html', {'books': books})
+        return render(request, 'book/book.html', {'books': books})
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
 def addBook(request):
@@ -45,7 +45,7 @@ def addBook(request):
              form = AddBookForm()
         
         context = {'form': form}
-        return render(request, 'library/addBook.html',context)
+        return render(request, 'book/addBook.html',context)
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
 def editBook(request, id):
@@ -62,7 +62,7 @@ def editBook(request, id):
             form = AddBookForm(instance=book)
         
         context = {'form': form}
-        return render(request, 'library/editBook.html',context)
+        return render(request, 'book/editBook.html',context)
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
 def deleteBook(request, id):
