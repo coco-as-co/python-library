@@ -35,6 +35,11 @@ td{
             <th>Edition</th>
             <th>Suppression</th>
         </tr>
+        {% if books|length_is:"0" %}
+        <tr>
+            <td colspan="10" >Aucun livre</td>
+        </tr>
+        {% endif %}
         {% for book in books %}
         <tr>
             
