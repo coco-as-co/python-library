@@ -48,7 +48,11 @@ td{
             {% endif %}
             <td>{{ book.duration_max }}</td>
             <td>{{ book.library }}</td>
+            {% if book.library.owner == user %}
             <td><a href="{% url 'editBook' book.id %}">Editer</a></td>
+            {% else %}
+            <td></td>
+            {% endif %}
             <td><a href="{% url 'deleteBook' book.id %}">Supprimer</a></td>
         </tr>
         {% endfor %}
