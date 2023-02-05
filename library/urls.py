@@ -12,6 +12,7 @@ urlpatterns = [
     path('library/edit/<int:library_id>/', views.edit_library, name='edit_library'),
     path('library/delete/<int:library_id>/', views.delete_library, name='delete_library'),
     #path('library/<int:library_id>/add/', views.add_book, name='add_book'),
+    path('books/', views.bookList, name='bookList'),
     path('book/', views.book, name='book'),
     path('book/add', views.addBook, name='addBook'),
     path('book/edit/<int:id>', views.editBook, name='editBook'),
