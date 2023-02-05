@@ -1,0 +1,54 @@
+{% extends '../base.html' %}
+
+{% block title %}Bibliothèques{% endblock %}
+
+{% block content %}
+
+{% if myLibraries %}
+    <div>
+        <div class="row">
+            <div class="col">
+                <h1>Mes bibliothèques
+                    <a href="{% url 'add_library' %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i></a>
+                </h1>
+            </div>
+        </div>
+
+        <div class="row row-cols-4">
+            {% for library in myLibraries %}
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ library.name }}</h5>
+                            <p class="card-text">{{ library.city }}</p>
+                            <a href="{% url 'detail_library' library.id %}" class="btn btn-success">Voir</a>
+                            <a href="{% url 'edit_library' library.id %}" class="btn btn-warning"><i class="bi bi-pencil"></i></a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% else %}
+    <a href="{% url 'add_library' %}" class="btn btn-primary">Créer ma première bibliothèque</a>
+{% endif %}
+
+<div class="mt-5">
+    <h1>Bibliothèques</h1>
+
+    <div class="row row-cols-4">
+        {% for library in libraries %}
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ library.name }}</h5>
+                        <p class="card-text">{{ library.city }}</p>
+                        <a href="{% url 'detail_library' library.id %}" class="btn btn-success">Voir</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

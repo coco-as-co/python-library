@@ -1,15 +1,22 @@
 {% extends "base.html" %}
 
-{% block title %}Connexion{% endblock %}
+{% block title %}Ajouter une bibliothèque{% endblock %}
 
 {% block content %}
 {% if form.errors %}
-
+  <p>Le formulaire contient des erreurs :</p>
+  <ul>
+    {% for field in form %}
+      {% for error in field.errors %}
+        <li>{{ field.label }} : {{ error }}</li>
+      {% endfor %}
+    {% endfor %}
+  </ul>
 {% endif %}
 
 <div class="card w-50 mx-auto">
   <div class="card-header text-center">
-    <h1>Se connecter</h1>
+    <h1>Editer {{ name }}</h1>
   </div>
   <div class="card-body justify-content-center">
     <form method="post">
@@ -21,12 +28,9 @@
         </div>
       {% endfor %}
       <div class="form-group mt-4 mb-2 text-center">
-        <button type="submit" class="btn btn-primary">Connexion</button>
+        <button type="submit" class="btn btn-primary">Sauvegarder</button>
       </div>
     </form>
-    <div class="w-100 text-center">
-      <small><a href="{% url 'register' %}">Pas encore de compte ?</a></small>
-    </div>
   </div>
 </div>
 

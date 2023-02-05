@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from datetime import timedelta
 
 USER = settings.AUTH_USER_MODEL
 
@@ -8,7 +9,7 @@ USER = settings.AUTH_USER_MODEL
 
 
 class Library(models.Model):
-    owner = models.ForeignKey(USER, on_delete=models.CASCADE)
+    owner = models.ForeignKey(USER, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=80)
     city = models.CharField(max_length=80)
     address = models.CharField(max_length=80)

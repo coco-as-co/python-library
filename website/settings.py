@@ -127,7 +127,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # REDIRECTION
 
-LOGIN_REDIRECT_URL = '/library/home/'
+LOGIN_REDIRECT_URL = '/library/'
 
 
 
