@@ -103,9 +103,10 @@ def book(request):
         if(len(libraryList) == 0):
              books = []
         else:
-            books = Book.objects.filter(library = libraryList[0].id)
-            print(books)
-        return render(request, 'book/book.html', {'books': books})
+            books = []
+            for lib in libraryList:
+                books.extend(Book.objects.filter(library = lib.id))
+        return render(request, 'book/book.html', {'books': books, 'libraryList': libraryList})
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
 def addBook(request):

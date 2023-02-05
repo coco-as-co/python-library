@@ -7,11 +7,19 @@
 
 {% endif %}
 
-<h2>Ajouter un livre</h2>
+<div class="card w-50 mx-auto">
+  <div class="card-header text-center">
+    <h1>Ajouter un livre</h1>
+  </div>
+  <div class="card-body justify-content-center">
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   {{ form.as_p }}
-  <button type="submit">Ajouter</button>
+  <div class="form-group mt-4 mb-2 text-center">
+    <button type="submit" class="btn btn-primary">Ajouter</button>
+  </div>
 </form>
+</div>
+</div>
 
 {% endblock %}
