@@ -1,16 +1,16 @@
 {% extends "../base.html" %}
 
 {% block title %}Book{% endblock %}
-{%  load static %}
+{% load static %}
 <style>
-table{
-  border-collapse: collapse
-}
+    table {
+        border-collapse: collapse
+    }
 
-td{
-  border: 1px solid black;
-  padding: 10px;
-}
+    td {
+        border: 1px solid black;
+        padding: 10px;
+    }
 </style>
 
 {% block content %}
@@ -18,11 +18,14 @@ td{
 
 {% endif %}
 
-<h2>Page Book</h2><h3>User : {{ user.username }}</h3>
-
-
+<div class="col mb-3">
+    <h1>Mes Livres
+        <a href="{% url 'addBook' %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i></a>
+    </h1>
+</div>
+<div>
     <!-- table html -->
-    <table>
+    <table id="table_book" class="table table-bordered text-center">
         <tr>
             <th>Titre</th>
             <th>Auteur</th>
@@ -31,18 +34,21 @@ td{
             <th>Genre</th>
             <th>Image</th>
             <th>Durée maximum emprunt</th>
-            <th>Library</th>
             <th>Edition</th>
             <th>Suppression</th>
         </tr>
         {% if books|length_is:"0" %}
         <tr>
-            <td colspan="10" >Aucun livre</td>
+            <td colspan="10">Aucun livre</td>
         </tr>
         {% endif %}
-        {% for book in books %}
+        {% for library in libraryList %}
         <tr>
-            
+            <td colspan="9">{{ library.name }}</td>
+        </tr>
+        {% for book in books %}
+        <tr class="text-justify">
+            {% if book.library == library %}
             <td>{{ book.title }}</td>
             <td>{{ book.author }}</td>
             <td>{{ book.editor }}</td>
@@ -52,21 +58,23 @@ td{
             <td><img src="{{ book.jacket.url }}" width="30px"> </td>
             {% endif %}
             <td>{{ book.duration_max }}</td>
-            <td>{{ book.library }}</td>
             {% if book.library.owner == user %}
-            <td><a href="{% url 'editBook' book.id %}">Editer</a></td>
+            <td><a href="{% url 'editBook' book.id %}" class="btn btn-warning"><i class="bi bi-pencil"></i></a></td>
             {% else %}
             <td></td>
             {% endif %}
-            <td><a href="{% url 'deleteBook' book.id %}">Supprimer</a></td>
+            <td><a href="{% url 'deleteBook' book.id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a></td>
+            {% endif %}
         </tr>
+        
         {% endfor %}
+        {% endfor %}
+
     </table>
 
-   
+
+</div>
 
 
-<a href="{% url 'addBook' %}">Ajouter un livre</a>
-<a href="{% url 'logout' %}">Se déconnecter</a>
 
 {% endblock %}

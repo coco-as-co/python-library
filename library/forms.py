@@ -38,6 +38,22 @@ class SignUpForm(UserCreationForm):
 #         return option
 
 class BookForm(forms.ModelForm):
+    title = forms.CharField(max_length=250, required=True, label='Titre',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Titre'}))
+    author = forms.CharField(max_length=80, required=True, label='Auteur',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Auteur'}))
+    library = forms.ModelChoiceField(queryset=Library.objects.all(), label='Bibliothèque',
+        widget=forms.Select(attrs={'class': 'form-control'}))
+    editor = forms.CharField(max_length=80, required=True, label='Editeur',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Editeur'}))
+    collection = forms.CharField(max_length=80, required=True, label='Collection',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Collection'}))
+    genre = forms.CharField(max_length=80, required=True, label='Genre',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Genre'}))
+    duration_max = forms.CharField(max_length=80,required=True, label='Durée max en jours',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Durée max'}))
+    jacket = forms.ImageField(required=False, label='Jaquette',
+        widget=forms.FileInput(attrs={'class': 'form-control'}))
     class Meta:
         model = Book
         fields = '__all__'

@@ -32,7 +32,7 @@ class Book(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return 'Title : ' + self.title + ' | Authors : ' + self.author 
+        return 'Title : ' + self.title + ' | Authors : ' + self.author +' | Library : ' + self.library.name
 
 
 
