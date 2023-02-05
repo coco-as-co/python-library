@@ -13,6 +13,7 @@ urlpatterns = [
     path('library/delete/<int:library_id>/', views.delete_library, name='delete_library'),
     #path('library/<int:library_id>/add/', views.add_book, name='add_book'),
     path('books/', views.bookList, name='bookList'),
+    path('books/borrow/<int:id>', views.borrowBook, name='borrowBook'),
     path('book/', views.book, name='book'),
     path('book/add', views.addBook, name='addBook'),
     path('book/edit/<int:id>', views.editBook, name='editBook'),

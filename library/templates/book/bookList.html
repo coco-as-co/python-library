@@ -3,7 +3,7 @@
 {% block title %}Book{% endblock %}
 {% load static %}
 <style>
-    img{
+    img {
         height: 300px;
     }
 </style>
@@ -14,24 +14,25 @@
 
 {% endif %}
 <form style="width:80%!important;display:flex!important;flex-flow: row wrap;" class="mb-5 form-inline">
-    <input style="display:inline-block;width:90%"  class="form-control  mr-sm-2 mr-2" type="search" placeholder="Search" aria-label="Search">
+    <input style="display:inline-block;width:90%" class="form-control  mr-sm-2 mr-2" type="search" placeholder="Search"
+        aria-label="Search">
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 </form>
 <div class="row row-cols-3 ">
-
     {% for book in books %}
     <div class="col ">
         <div class="card mb-5">
-            <img style="height: 300px ;object-fit: cover;" class="  img-thumbnail" src="{{book.jacket.url}}" alt="Card image cap">
+            <img style="height: 300px ;object-fit: cover;" class="  img-thumbnail" src="{{book.jacket.url}}"
+                alt="Card image cap">
             <div class="card-body">
                 <h5 class="card-title">{{book.title}}</h5>
                 <hr>
                 <div class="card-text">
-                    <span class="clearfix">Autheur : {{book.author}}  </span>
-                    <span class="clearfix">Editeur : {{book.editor}}  </span>
-                    <span class="clearfix">Collection : {{book.collection}}  </span>
-                    <span class="clearfix">Genre : {{book.genre}}  </span>
-                    <span class="clearfix">Durée max : {{book.duration_max}}  </span>
+                    <span class="clearfix">Autheur : {{book.author}} </span>
+                    <span class="clearfix">Editeur : {{book.editor}} </span>
+                    <span class="clearfix">Collection : {{book.collection}} </span>
+                    <span class="clearfix">Genre : {{book.genre}} </span>
+                    <span class="clearfix">Durée max : {{book.duration_max}} </span>
                 </div>
                 <hr>
                 <div>
@@ -40,14 +41,31 @@
                     <span class="clearfix"> Addresse : {{book.library.address}}</span>
                 </div>
                 <hr>
+
+                {% if book.book_user_set.all %}
+                {% for book_user in book.book_user_set.all %}
+                {% if book_user %}
                 <div class="d-flex justify-content-center">
-                    <a href="" class="btn btn-primary">Emprunter</a>
+                    <a href="{% url 'borrowBook' book.id%} " class="disabled btn btn-warning">
+                        Indisponible
+                    </a>
                 </div>
+                {% endif %}
+                {% endfor %}
+                {% else %}
+                <div class="d-flex justify-content-center">
+                    <a href="{% url 'borrowBook' book.id%} " class=" btn btn-primary">
+                        Emprunter
+                    </a>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
     {% endfor %}
 </div>
+
+
 
 
 {% endblock %}

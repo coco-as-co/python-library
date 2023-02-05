@@ -40,7 +40,7 @@ class Book_User(models.Model):
     user = models.ForeignKey(USER, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     borrowed_at = models.DateTimeField()
-    returned_at = models.DateTimeField()
+    returned_at = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
