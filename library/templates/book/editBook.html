@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Créer un compte{% endblock %}
+
+{% block content %}
+{% if form.errors %}
+
+{% endif %}
+
+<h2>Editer un livre</h2>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Editer</button>
+</form>
+
+{% endblock %}

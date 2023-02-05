@@ -13,21 +13,26 @@ class Library(models.Model):
     city = models.CharField(max_length=80)
     address = models.CharField(max_length=80)
 
-
+    def __str__(self):
+        return self.name
 # BOOKS
 
 
 class Book(models.Model):
-    library = models.ForeignKey(Library, on_delete=models.CASCADE)
+    library = models.ForeignKey(Library, on_delete=models.CASCADE,null=True)
     title = models.CharField(max_length=80)
     author = models.CharField(max_length=80)
     editor = models.CharField(max_length=80)
-    jacket = models.CharField(max_length=80)  # image
+    jacket = models.ImageField(upload_to='images', default=None)  # image
     collection = models.CharField(max_length=80)
     genre = models.CharField(max_length=80)
-    duration_max = models.DurationField()
+    duration_max = models.DurationField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return 'Title : ' + self.title + ' | Authors : ' + self.author 
+
 
 
 class Book_User(models.Model):
@@ -47,6 +52,8 @@ class Salon(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.title
 
 class Message(models.Model):
     user = models.ForeignKey(USER, on_delete=models.SET_NULL, null=True)
@@ -54,6 +61,7 @@ class Message(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
 
 
 # SESSION (Seance)
@@ -65,10 +73,11 @@ class Group(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-
+    def __str__(self):
+        return self.name
 class User_Group(models.Model):
     user = models.ForeignKey(USER, on_delete=models.CASCADE)
-    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
     isActive = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -77,6 +86,6 @@ class User_Group(models.Model):
 class Session(models.Model):
     date = models.DateField()
     hour = models.TimeField()
-    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
