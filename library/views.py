@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
 from django.contrib import messages
-from .forms import SignUpForm , BookForm , Book , Library, LibraryForm, BookLibraryForm
+from .forms import SignUpForm , BookForm , Book , Library, LibraryForm, Book_User , BookLibraryForm
+
+
 from .models import Library
-
-
+from datetime import datetime
+from datetime import timedelta
 
 def index(request):
     return HttpResponse("Hello, world. You're at the library index.")
@@ -131,7 +133,9 @@ def book(request):
             books = []
             for lib in libraryList:
                 books.extend(Book.objects.filter(library = lib.id))
-        return render(request, 'book/book.html', {'books': books, 'libraryList': libraryList})
+        
+        book_user = Book_User.objects.all().prefetch_related('book__book_user_set')
+        return render(request, 'book/book.html', {'books': books, 'libraryList': libraryList, 'book_user': book_user})
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
 def addBook(request):
@@ -177,3 +181,41 @@ def deleteBook(request, id):
         return redirect('book')
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
+def bookList(request):
+    if request.user.is_authenticated:
+        libraryList = Library.objects.exclude(owner=request.user)
+        print(libraryList)
+        books = []
+        if(libraryList.count() == 1):
+            books = Book.objects.filter(library__in = libraryList)
+        else:
+            for lib in libraryList:
+                books.extend(Book.objects.filter(library = lib.id))
+        book_user = Book_User.objects.all().prefetch_related('book_user_set')
+        return render(request, 'book/bookList.html', {'books': books, 'book_users': book_user})
+    return HttpResponseNotFound('<h1>Page not found</h1>')
+
+def borrowBook(request, id):
+    if request.user.is_authenticated:
+        book_user = Book_User()
+        book = Book.objects.get(id=id)
+        book_user.book = book
+        book_user.user = request.user
+        book_user.borrowed_at = datetime.now()
+        print(book.duration_max)
+        book_user.returned_at = datetime.now() +  timedelta(days = book.duration_max)
+        book_user.save()
+        messages.success(request, 'Book borrowed successfully')
+
+        return redirect('bookList')
+    return HttpResponseNotFound('<h1>Page not found</h1>')
+
+
+def returnBook(request, id):
+    if request.user.is_authenticated:
+        book_user = Book_User.objects.get(book=id)
+        book_user.delete()
+        messages.success(request, 'Book returned successfully')
+
+        return redirect('book')
+    return HttpResponseNotFound('<h1>Page not found</h1>')

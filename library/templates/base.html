@@ -19,6 +19,9 @@
             <a class="nav-link" href="{% url 'libraries' %}">Bibliothèques</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="{% url 'bookList' %}">Listes des livres </a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'book' %}">Mes livres</a>
           </li>
         </ul>
@@ -34,7 +37,7 @@
     </nav>
   </header>
   {% endif %}
-  <main class="container mt-3">
+  <main style="max-width: 70%!important;" class="container mt-3">
     {% block content %}
     {% endblock %}
   </main>

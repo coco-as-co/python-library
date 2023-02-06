@@ -1,13 +1,12 @@
 from django.db import models
 from django.conf import settings
-from datetime import timedelta
-
+from datetime import date
 USER = settings.AUTH_USER_MODEL
 
 
+
+
 # LIBRARY
-
-
 class Library(models.Model):
     owner = models.ForeignKey(USER, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=80)
@@ -27,7 +26,7 @@ class Book(models.Model):
     jacket = models.ImageField(upload_to='images', default=None)  # image
     collection = models.CharField(max_length=80)
     genre = models.CharField(max_length=80)
-    duration_max = models.DurationField(null=True)
+    duration_max = models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -35,15 +34,19 @@ class Book(models.Model):
         return 'Title : ' + self.title + ' | Authors : ' + self.author +' | Library : ' + self.library.name
 
 
-
 class Book_User(models.Model):
     user = models.ForeignKey(USER, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     borrowed_at = models.DateTimeField()
-    returned_at = models.DateTimeField()
+    returned_at = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    @property
+    def is_past_due(self):
+        if(date.today() < self.returned_at):
+            return True
+        return False
 
 # FORUM
 
