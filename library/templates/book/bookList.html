@@ -43,15 +43,11 @@
                 <hr>
 
                 {% if book.book_user_set.all %}
-                {% for book_user in book.book_user_set.all %}
-                {% if book_user %}
                 <div class="d-flex justify-content-center">
                     <a href="{% url 'borrowBook' book.id%} " class="disabled btn btn-warning">
                         Indisponible
                     </a>
                 </div>
-                {% endif %}
-                {% endfor %}
                 {% else %}
                 <div class="d-flex justify-content-center">
                     <a href="{% url 'borrowBook' book.id%} " class=" btn btn-primary">

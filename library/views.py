@@ -106,7 +106,9 @@ def book(request):
             books = []
             for lib in libraryList:
                 books.extend(Book.objects.filter(library = lib.id))
-        return render(request, 'book/book.html', {'books': books, 'libraryList': libraryList})
+        
+        book_user = Book_User.objects.all().prefetch_related('book__book_user_set')
+        return render(request, 'book/book.html', {'books': books, 'libraryList': libraryList, 'book_user': book_user})
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
 def addBook(request):
@@ -162,7 +164,6 @@ def bookList(request):
         else:
             for lib in libraryList:
                 books.extend(Book.objects.filter(library = lib.id))
-        # print(books)
         book_user = Book_User.objects.all().prefetch_related('book_user_set')
         return render(request, 'book/bookList.html', {'books': books, 'book_users': book_user})
     return HttpResponseNotFound('<h1>Page not found</h1>')

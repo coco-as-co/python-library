@@ -1,13 +1,12 @@
 from django.db import models
 from django.conf import settings
-from datetime import timedelta
-
+from datetime import date
 USER = settings.AUTH_USER_MODEL
 
 
+
+
 # LIBRARY
-
-
 class Library(models.Model):
     owner = models.ForeignKey(USER, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=80)
@@ -34,7 +33,11 @@ class Book(models.Model):
     def __str__(self):
         return 'Title : ' + self.title + ' | Authors : ' + self.author +' | Library : ' + self.library.name
 
-
+    @property
+    def is_past_due(self):
+        if(date.today() < self.returned_at):
+            return True
+        return False
 
 class Book_User(models.Model):
     user = models.ForeignKey(USER, on_delete=models.CASCADE)
@@ -44,6 +47,11 @@ class Book_User(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    @property
+    def is_past_due(self):
+        if(date.today() < self.returned_at):
+            return True
+        return False
 
 # FORUM
 
