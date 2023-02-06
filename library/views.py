@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
 from django.contrib import messages
-from .forms import SignUpForm , BookForm , Book , Library, LibraryForm
+from .forms import SignUpForm , BookForm , Book , Library, LibraryForm, BookLibraryForm
 from .models import Library
 
 
@@ -59,7 +59,8 @@ def add_library(request):
 def detail_library(request, library_id):
     if request.user.is_authenticated:
         library = Library.objects.get(id=library_id)
-        context = {'library': library}
+        books = Book.objects.filter(library=library_id)
+        context = {'library': library, 'books': books}
         return render(request, 'library/detail.html', context)
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
@@ -97,11 +98,35 @@ def delete_library(request, library_id):
         return redirect('libraries')
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
+def add_book_library(request, library_id):
+    if request.user.is_authenticated:
+        library = Library.objects.get(id=library_id)
+
+        if library.owner != request.user:
+            return redirect('libraries')
+
+        if request.method == 'POST':
+            form = BookLibraryForm(request.POST, request.FILES, libraryId = library.id)
+            print(form.errors)
+            if form.is_valid():
+                form.instance.library = library
+                form.save()
+                messages.success(request, 'Book added successfully')
+
+                return redirect('detail_library', library_id=library_id)
+        else:
+            form = BookLibraryForm(libraryId = library.id)
+            form.instance.library = library
+
+        context = {'form': form, 'library': library}
+        return render(request, 'library/books/add.html', context)
+    return HttpResponseNotFound('<h1>Page not found</h1>')
+
 def book(request):
     if request.user.is_authenticated :
         libraryList = Library.objects.filter(owner=request.user.id)
         if(len(libraryList) == 0):
-             books = []
+            books = []
         else:
             books = []
             for lib in libraryList:
