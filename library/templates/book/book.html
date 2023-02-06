@@ -36,6 +36,8 @@
             <th>Emprunt ?</th>
             <th>Emprunter le : </th>
             <th>A rendre le : </th>
+            <th>Par : </th>
+            <th>Rendu ?</th>
             <th>Edition</th>
             <th>Suppression</th>
         </tr>
@@ -46,7 +48,7 @@
         {% endif %}
         {% for library in libraryList %}
         <tr>
-            <td colspan="13">{{ library.name }}</td>
+            <td colspan="14">{{ library.name }}</td>
         </tr>
         {% for book in books %}
         <tr class="text-justify align-middle">
@@ -85,11 +87,18 @@
                 <span class="">{{ books.returned_at|date:"d/m/Y" }}</span>
                 {% endfor %}
             </td>
-            {% if book.library.owner == user %}
-            <td><a href="{% url 'editBook' book.id %}" class="btn btn-warning"><i class="bi bi-pencil"></i></a></td>
-            {% else %}
-            <td></td>
+            <td>
+                {% for books in book.book_user_set.all %}
+                <span class="">{{ books.user.username }}</span>
+                {% endfor %}
+            </td>
+            <td>
+            {% if book.book_user_set.all %}
+            <a href='{% url "returnBook" book.id %}' class='btn btn-success'><i class="bi bi-hand-thumbs-up"></i></a>
             {% endif %}
+        
+        </td>
+            <td><a href="{% url 'editBook' book.id %}" class="btn btn-warning"><i class="bi bi-pencil"></i></a></td>
             <td><a href="{% url 'deleteBook' book.id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a></td>
             {% endif %}
         </tr>

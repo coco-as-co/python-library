@@ -182,3 +182,13 @@ def borrowBook(request, id):
 
         return redirect('bookList')
     return HttpResponseNotFound('<h1>Page not found</h1>')
+
+
+def returnBook(request, id):
+    if request.user.is_authenticated:
+        book_user = Book_User.objects.get(book=id)
+        book_user.delete()
+        messages.success(request, 'Book returned successfully')
+
+        return redirect('book')
+    return HttpResponseNotFound('<h1>Page not found</h1>')
