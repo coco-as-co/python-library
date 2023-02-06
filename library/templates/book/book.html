@@ -60,6 +60,8 @@
             <td>{{ book.genre }}</td>
             {% if book.jacket %}
             <td><img src="{{ book.jacket.url }}" width="30px"> </td>
+            {% else %}
+            <td></td>
             {% endif %}
             <td>{{ book.duration_max }} jours</td>
             <td>
