@@ -32,6 +32,17 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']
 
+class ProfileForm(forms.ModelForm):
+    email = forms.EmailField(max_length=254, required=True, label='Email',
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}))
+    first_name = forms.CharField(max_length=30, required=False, label='Prénom',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Prénom'}))
+    last_name = forms.CharField(max_length=30, required=False, label='Nom',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom'}))
+
+    class Meta:
+        model = User
+        fields = [ 'email', 'first_name', 'last_name']
 
 # class LibrarySelect(forms.Select):
 #     def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):

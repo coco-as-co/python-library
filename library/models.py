@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from datetime import date
+from datetime import datetime
 USER = settings.AUTH_USER_MODEL
 
 
@@ -41,12 +41,6 @@ class Book_User(models.Model):
     returned_at = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    @property
-    def is_past_due(self):
-        if(date.today() < self.returned_at):
-            return True
-        return False
 
 # FORUM
 
