@@ -4,7 +4,7 @@ from django.contrib import messages
 from .forms import SignUpForm , BookForm , Book , Library, LibraryForm, Book_User
 from .models import Library
 from datetime import datetime
-
+from datetime import timedelta
 
 def index(request):
     return HttpResponse("Hello, world. You're at the library index.")
@@ -175,6 +175,8 @@ def borrowBook(request, id):
         book_user.book = book
         book_user.user = request.user
         book_user.borrowed_at = datetime.now()
+        print(book.duration_max)
+        book_user.returned_at = datetime.now() +  timedelta(days = book.duration_max)
         book_user.save()
         messages.success(request, 'Book borrowed successfully')
 

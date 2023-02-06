@@ -26,18 +26,13 @@ class Book(models.Model):
     jacket = models.ImageField(upload_to='images', default=None)  # image
     collection = models.CharField(max_length=80)
     genre = models.CharField(max_length=80)
-    duration_max = models.DurationField(null=True)
+    duration_max = models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return 'Title : ' + self.title + ' | Authors : ' + self.author +' | Library : ' + self.library.name
 
-    @property
-    def is_past_due(self):
-        if(date.today() < self.returned_at):
-            return True
-        return False
 
 class Book_User(models.Model):
     user = models.ForeignKey(USER, on_delete=models.CASCADE)

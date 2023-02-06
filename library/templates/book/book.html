@@ -35,6 +35,7 @@
             <th>Durée maximum emprunt</th>
             <th>Emprunt ?</th>
             <th>Emprunter le : </th>
+            <th>A rendre le : </th>
             <th>Edition</th>
             <th>Suppression</th>
         </tr>
@@ -45,7 +46,7 @@
         {% endif %}
         {% for library in libraryList %}
         <tr>
-            <td colspan="9">{{ library.name }}</td>
+            <td colspan="13">{{ library.name }}</td>
         </tr>
         {% for book in books %}
         <tr class="text-justify align-middle">
@@ -58,7 +59,7 @@
             {% if book.jacket %}
             <td><img src="{{ book.jacket.url }}" width="30px"> </td>
             {% endif %}
-            <td>{{ book.duration_max }}</td>
+            <td>{{ book.duration_max }} jours</td>
             <td>
                 {% if book.book_user_set.all %}
                 <i style="font-size: 1.5rem;" class="text-success bi bi-check-lg"></i>
@@ -78,7 +79,12 @@
                 <span class="text-success">{{ books.returned_at|date:"d/m/Y" }}</span>
                 {% endif %}
                 {% endfor %} -->
-            </td>>
+            </td>
+            <td>
+                {% for books in book.book_user_set.all %}
+                <span class="">{{ books.returned_at|date:"d/m/Y" }}</span>
+                {% endfor %}
+            </td>
             {% if book.library.owner == user %}
             <td><a href="{% url 'editBook' book.id %}" class="btn btn-warning"><i class="bi bi-pencil"></i></a></td>
             {% else %}
