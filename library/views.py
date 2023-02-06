@@ -2,8 +2,6 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
 from django.contrib import messages
 from .forms import SignUpForm , BookForm , Book , Library, LibraryForm, Book_User , BookLibraryForm
-
-
 from .models import Library
 from datetime import datetime
 from datetime import timedelta
@@ -218,4 +216,13 @@ def returnBook(request, id):
         messages.success(request, 'Book returned successfully')
 
         return redirect('book')
+    return HttpResponseNotFound('<h1>Page not found</h1>')
+
+def profile(request):
+    if request.user.is_authenticated:
+        # user = User.objects.get(id=request.user.id)
+        user = request.user
+        books = Book_User.objects.filter(user = request.user.id).exclude(returned_at__lt=datetime.now())
+        books_late = Book_User.objects.filter(user = request.user.id).exclude(returned_at__gt=datetime.now())
+        return render(request, 'profile/index.html', {'user': user, 'books': books, 'books_late': books_late})
     return HttpResponseNotFound('<h1>Page not found</h1>')
