@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
 from django.contrib import messages
-from .forms import SignUpForm , BookForm , Book , Library, LibraryForm, Book_User , BookLibraryForm
+from .forms import SignUpForm , BookForm , Book , Library, LibraryForm, Book_User , BookLibraryForm , ProfileForm, User
 from .models import Library
 from datetime import datetime
 from datetime import timedelta
@@ -225,4 +225,21 @@ def profile(request):
         books = Book_User.objects.filter(user = request.user.id).exclude(returned_at__lt=datetime.now())
         books_late = Book_User.objects.filter(user = request.user.id).exclude(returned_at__gt=datetime.now())
         return render(request, 'profile/index.html', {'user': user, 'books': books, 'books_late': books_late})
+    return HttpResponseNotFound('<h1>Page not found</h1>')
+
+def editProfile(request, id):
+    if request.user.is_authenticated:
+        user = User.objects.get(id=id)
+        if request.method == 'POST':
+            form = ProfileForm(request.POST,instance=user)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'profile updated successfully')
+
+                return redirect('profile')
+        else:
+            form = form = ProfileForm(instance=user)
+        
+        context = {'form': form}
+        return render(request, 'profile/edit.html',context)
     return HttpResponseNotFound('<h1>Page not found</h1>')
