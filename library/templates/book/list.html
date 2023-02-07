@@ -13,10 +13,11 @@
 {% if form.errors %}
 
 {% endif %}
-<form style="width:80%!important;display:flex!important;flex-flow: row wrap;" class="mb-5 form-inline">
-    <input style="display:inline-block;width:90%" class="form-control  mr-sm-2 mr-2" type="search" placeholder="Search"
-        aria-label="Search">
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+
+<form method="get" style="width:80%!important;display:flex!important;flex-flow: row wrap;" class="mb-5 form-inline">
+    <input  value="{{ request.GET.search }}" style="display:inline-block;width:85%" class="form-control  mr-sm-2 mr-2" type="search" placeholder="Recherche"
+        aria-label="Search" name="search">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Recherche</button>
 </form>
 <div class="row row-cols-4 ">
     {% for book in books %}

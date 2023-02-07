@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseNotFound
+from django.db.models import Q
+
 from django.contrib import messages
 from .forms import SignUpForm , BookForm, LibraryForm, Book_User , BookLibraryForm , ProfileForm, GroupForm, SessionForm, SalonForm, User
 from .models import Library, Session, User_Group, Salon, Message, Group, Book, Book_User
@@ -192,6 +194,20 @@ def book_list(request):
         else:
             for lib in library_list:
                 books.extend(Book.objects.filter(library = lib.id))
+
+        keyword = request.GET.get('search').strip()
+        if keyword:
+          books = books.filter(
+            Q(title__icontains=keyword) |
+            Q(author__icontains=keyword) |
+            Q(editor__icontains=keyword) |
+            Q(collection__icontains=keyword) |
+            Q(genre__icontains=keyword) |
+            Q(library__address__icontains=keyword) |
+            Q(library__city__icontains=keyword) |
+            Q(library__name__icontains=keyword)
+          ).distinct()
+
         book_user = Book_User.objects.all().prefetch_related('book_user_set')
         return render(request, 'book/list.html', {'books': books, 'book_users': book_user})
     return HttpResponseNotFound('<h1>Page not found</h1>')
