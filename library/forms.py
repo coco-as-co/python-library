@@ -1,10 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from .models import Book
-from .models import Library
-from .models import Book_User
-from .models import Group
+from django.contrib.admin.widgets import AdminDateWidget, AdminTimeWidget
+from .models import Book, Book_User, Library, Session, Group
+import datetime
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(label="Pseudo",
@@ -72,7 +71,7 @@ class BookForm(forms.ModelForm):
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
-        user =  kwargs.pop('userId',None)
+        user =  kwargs.pop('user_id',None)
         super(BookForm, self).__init__(*args, **kwargs)
 
         self.fields['library'].queryset = Library.objects.filter(owner=user)
@@ -91,7 +90,7 @@ class BookLibraryForm(forms.ModelForm):
     genre = forms.CharField(max_length=80, required=True, label='Genre',
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Genre'}))
     duration_max = forms.CharField(max_length=80,required=True, label='Durée max en jours',
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Durée max'}))
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Durée max', 'type': 'number'}))
     jacket = forms.FileField(required=False, label='Jaquette',
         widget=forms.FileInput(attrs={'class': 'form-control'}))
     class Meta:
@@ -99,7 +98,7 @@ class BookLibraryForm(forms.ModelForm):
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
-        library = kwargs.pop('libraryId',None)
+        library = kwargs.pop('lib_id',None)
         super(BookLibraryForm, self).__init__(*args, **kwargs)
 
         self.fields['library'].queryset = Library.objects.filter(id=library)
@@ -126,3 +125,17 @@ class GroupForm(forms.ModelForm):
     class Meta:
         model = Group
         fields = ['name']
+
+class SessionForm(forms.ModelForm):
+    date = forms.DateField(required=True, label='Date',
+        widget=AdminDateWidget(attrs={'class': 'form-control', 'type': 'date', 'min': (datetime.datetime.now() + datetime.timedelta(days=1)).strftime("%Y-%m-%d"), 'placeholder': 'Date'}))
+    hour = forms.TimeField(required=True, label='Heure',
+        widget=AdminTimeWidget(attrs={'class': 'form-control', 'type': 'time', 'placeholder': 'Heure'}))
+    
+    class Meta:
+        model = Session
+        fields = ['date', 'hour']
+        widgets = {
+            "date": AdminDateWidget,
+            "hour": AdminTimeWidget
+        }

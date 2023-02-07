@@ -23,4 +23,31 @@
   </div>
 </div>
 
+<div class="mt-5">
+  <h1>Sessions
+    {% if group.owner == user %}
+      <a href="{% url 'add_session' group.id %}" class="btn btn-success"><i class="bi bi-plus-lg"></i></a>
+    {% endif %}
+  </h1>
+
+  {% if sessions|length >= 0 %}
+  <div class="row row-cols-4">
+    {% for session in sessions %}
+      <div class="col">
+          <div class="card">
+              <div class="card-body">
+                  <h5 class="card-title">{{ session.date|date:"d/m/Y" }}</h5>
+                  <p class="card-text">À : {{ session.hour|time:"H:i" }}</p>
+                  {% if group.owner == user %}
+                    <a href="{% url 'edit_session' group.id session.id %}" class="btn btn-warning"><i class="bi bi-pencil"></i></a>
+                    <a href="{% url 'delete_session' group.id session.id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a>
+                  {% endif %}
+              </div>
+          </div>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+
 {% endblock %}

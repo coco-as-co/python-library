@@ -44,8 +44,8 @@
                   <p class="card-text">Genre : {{ book.genre }}</p>
                   <p class="card-text">Collection : {{ book.collection }}</p>
                   {% if library.owner == user %}
-                    <a href="{% url 'editBook' book.id %}" class="btn btn-warning"><i class="bi bi-pencil"></i></a>
-                    <a href="{% url 'deleteBook' book.id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a>
+                    <a href="{% url 'edit_book' book.id %}" class="btn btn-warning"><i class="bi bi-pencil"></i></a>
+                    <a href="{% url 'delete_book' book.id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a>
                   {% endif %}
               </div>
           </div>
