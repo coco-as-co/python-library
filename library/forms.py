@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
+from django.contrib.admin.widgets import AdminDateWidget, AdminTimeWidget
 from .models import Book, Book_User, Library, Session, Group
+import datetime
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(label="Pseudo",
@@ -96,7 +98,7 @@ class BookLibraryForm(forms.ModelForm):
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
-        library = kwargs.pop('libraryId',None)
+        library = kwargs.pop('lib_id',None)
         super(BookLibraryForm, self).__init__(*args, **kwargs)
 
         self.fields['library'].queryset = Library.objects.filter(id=library)
@@ -126,10 +128,14 @@ class GroupForm(forms.ModelForm):
 
 class SessionForm(forms.ModelForm):
     date = forms.DateField(required=True, label='Date',
-        widget=forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'Date'}))
+        widget=AdminDateWidget(attrs={'class': 'form-control', 'type': 'date', 'min': (datetime.datetime.now() + datetime.timedelta(days=1, hours=3)).strftime("%Y-%m-%d"), 'placeholder': 'Date'}))
     hour = forms.TimeField(required=True, label='Heure',
-        widget=forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Heure'}))
+        widget=AdminTimeWidget(attrs={'class': 'form-control', 'type': 'time', 'placeholder': 'Heure'}))
     
     class Meta:
         model = Session
         fields = ['date', 'hour']
+        widgets = {
+            "date": AdminDateWidget,
+            "hour": AdminTimeWidget
+        }

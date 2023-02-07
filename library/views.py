@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
 from django.contrib import messages
 from .forms import SignUpForm , BookForm , Book , Library, LibraryForm, Book_User , BookLibraryForm , ProfileForm, User, GroupForm, Group, SessionForm
-from .models import Library
+from .models import Library, Session, User_Group
 from datetime import datetime
 from datetime import timedelta
 
@@ -109,7 +109,6 @@ def add_book_library(request, library_id):
 
         if request.method == 'POST':
             form = BookLibraryForm(request.POST, request.FILES, libraryId = library.id)
-            print(form.errors)
             if form.is_valid():
                 form.instance.library = library
                 form.save()
@@ -184,7 +183,6 @@ def deleteBook(request, id):
 def bookList(request):
     if request.user.is_authenticated:
         libraryList = Library.objects.exclude(owner=request.user)
-        print(libraryList)
         books = []
         if(libraryList.count() == 1):
             books = Book.objects.filter(library__in = libraryList)
@@ -202,7 +200,6 @@ def borrowBook(request, id):
         book_user.book = book
         book_user.user = request.user
         book_user.borrowed_at = datetime.now()
-        print(book.duration_max)
         book_user.returned_at = datetime.now() +  timedelta(days = book.duration_max)
         book_user.save()
         messages.success(request, 'Book borrowed successfully')
@@ -275,7 +272,15 @@ def add_group(request):
 def detail_group(request, group_id):
     if request.user.is_authenticated:
         group = Group.objects.get(id=group_id)
-        context = {'group': group}
+        sessions = None
+
+        exists = User_Group.objects.filter(user = request.user.id, group = group_id).exists()
+        is_owner = group.owner == request.user
+
+        if exists or is_owner:
+            sessions = Session.objects.filter(group = group_id)
+
+        context = {'group': group, 'sessions': sessions}
         return render(request, 'group/detail.html', context)
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
@@ -313,28 +318,19 @@ def delete_group(request, group_id):
         return redirect('groups')
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
-def sessions(request, group_id):
-    if request.user.is_authenticated:
-        exists = User_Group.objects.filter(user = request.user.id, group = group_id).exists()
-
-        if exists:
-            sessions = Session.objects.filter(group = group_id)
-            return render(request, 'group/session/index.html', {'sessions': sessions, 'group_id': group_id})
-
-    return HttpResponseNotFound('<h1>Page not found</h1>')
-
 def add_session(request, group_id):
     if request.user.is_authenticated:
-        is_owner = Group.objects.filter(owner = request.user.id, id = group_id).exists()
+        group = Group.objects.filter(owner = request.user.id, id = group_id).first()
 
-        if is_owner:
+        if group:
             if request.method == 'POST':
                 form = SessionForm(request.POST)
                 if form.is_valid():
+                    form.instance.group = group
                     form.save()
                     messages.success(request, 'Session added successfully')
 
-                    return redirect('sessions')
+                    return redirect('detail_group', group_id)
             else:
                 form = SessionForm()
             
@@ -354,7 +350,7 @@ def edit_session(request, group_id, session_id):
                     form.save()
                     messages.success(request, 'Session updated successfully')
 
-                    return redirect('sessions')
+                    return redirect('detail_group', group_id)
             else:
                 form = SessionForm(instance=session)
             
@@ -371,5 +367,5 @@ def delete_session(request, group_id, session_id):
             session.delete()
             messages.success(request, 'Session deleted successfully')
 
-            return redirect('sessions')
+        return redirect('detail_group', group_id)
     return HttpResponseNotFound('<h1>Page not found</h1>')
