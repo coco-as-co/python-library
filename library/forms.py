@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from .models import Book
 from .models import Library
 from .models import Book_User
+from .models import Group
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(label="Pseudo",
@@ -117,3 +118,11 @@ class LibraryForm(forms.ModelForm):
     class Meta:
         model = Library
         fields = ['name', 'city', 'address']
+
+class GroupForm(forms.ModelForm):
+    name = forms.CharField(max_length=80, required=True, label='Nom du groupe', 
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom du groupe'}))
+
+    class Meta:
+        model = Group
+        fields = ['name']
