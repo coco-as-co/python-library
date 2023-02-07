@@ -263,7 +263,7 @@ def add_group(request):
             form.save()
             messages.success(request, 'Group created successfully')
 
-            return redirect('libraries')
+            return redirect('detail_group', form.instance.id)
     else:
         form = GroupForm()
 
@@ -282,7 +282,7 @@ def edit_group(request, group_id):
         group = Group.objects.get(id=group_id)
 
         if group.owner != request.user:
-            return redirect('libraries')
+            return redirect('groups')
 
         if request.method == 'POST':
             form = GroupForm(request.POST, instance=group)
@@ -303,10 +303,10 @@ def delete_group(request, group_id):
         group = Group.objects.get(id=group_id)
 
         if group.owner != request.user:
-            return redirect('libraries')
+            return redirect('groups')
 
         group.delete()
         messages.success(request, 'Group deleted successfully')
 
-        return redirect('libraries')
+        return redirect('groups')
     return HttpResponseNotFound('<h1>Page not found</h1>')
