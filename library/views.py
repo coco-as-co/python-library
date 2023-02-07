@@ -7,7 +7,9 @@ from datetime import datetime
 from datetime import timedelta
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the library index.")
+    if request.user.is_authenticated:
+        return redirect('home')
+    return render(request, 'landing_page.html')
 
 def register(request):
     if request.method == 'POST':
