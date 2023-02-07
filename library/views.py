@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
 from django.contrib import messages
-from .forms import SignUpForm , BookForm , Book , Library, LibraryForm, Book_User , BookLibraryForm , ProfileForm, User, GroupForm, Group
+from .forms import SignUpForm , BookForm , Book , Library, LibraryForm, Book_User , BookLibraryForm , ProfileForm, User, GroupForm, Group, SessionForm
 from .models import Library
 from datetime import datetime
 from datetime import timedelta
@@ -311,4 +311,75 @@ def delete_group(request, group_id):
         messages.success(request, 'Group deleted successfully')
 
         return redirect('groups')
+    return HttpResponseNotFound('<h1>Page not found</h1>')
+
+def sessions(request, group_id):
+    if request.user.is_authenticated:
+        exists = User_Group.objects.filter(user = request.user.id, group = group_id).exists()
+
+        if exists:
+            sessions = Session.objects.filter(group = group_id)
+            return render(request, 'profile/sessions.html', {'sessions': sessions})
+
+    return HttpResponseNotFound('<h1>Page not found</h1>')
+
+def detail_session(request, id):
+    if request.user.is_authenticated:
+        session = Session.objects.get(id=id)
+        exist = User_Group.objects.filter(user = request.user.id, group = session.group.id).exists()
+
+        if exist:
+            return render(request, 'profile/detail_session.html', {'session': session})
+
+    return HttpResponseNotFound('<h1>Page not found</h1>')
+
+def add_session(request, group_id):
+    if request.user.is_authenticated:
+        is_owner = Group.objects.filter(owner = request.user.id, id = group_id).exists()
+
+        if is_owner:
+            if request.method == 'POST':
+                form = SessionForm(request.POST)
+                if form.is_valid():
+                    form.save()
+                    messages.success(request, 'Session added successfully')
+
+                    return redirect('sessions')
+            else:
+                form = SessionForm()
+            
+            context = {'form': form}
+            return render(request, 'profile/add_session.html',context)
+    return HttpResponseNotFound('<h1>Page not found</h1>')
+
+def edit_session(request, group_id, session_id):
+    if request.user.is_authenticated:
+        is_owner = Group.objects.filter(owner = request.user.id, id = group_id).exists()
+
+        if is_owner:
+            session = Session.objects.get(id=session_id)
+            if request.method == 'POST':
+                form = SessionForm(request.POST,instance=session)
+                if form.is_valid():
+                    form.save()
+                    messages.success(request, 'Session updated successfully')
+
+                    return redirect('sessions')
+            else:
+                form = SessionForm(instance=session)
+            
+            context = {'form': form}
+            return render(request, 'profile/edit_session.html',context)
+    return HttpResponseNotFound('<h1>Page not found</h1>')
+
+def delete_session(request, group_id, session_id):
+    if request.user.is_authenticated:
+        is_owner = Group.objects.filter(owner = request.user.id, id = group_id).exists()
+
+        if is_owner:
+            session = Session.objects.get(id=session_id)
+            session.delete()
+            messages.success(request, 'Session deleted successfully')
+
+            return redirect('sessions')
     return HttpResponseNotFound('<h1>Page not found</h1>')

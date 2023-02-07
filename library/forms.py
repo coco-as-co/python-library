@@ -126,3 +126,13 @@ class GroupForm(forms.ModelForm):
     class Meta:
         model = Group
         fields = ['name']
+
+class SessionForm(forms.ModelForm):
+    date = forms.DateField(required=True, label='Date',
+        widget=forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'Date'}))
+    hour = forms.TimeField(required=True, label='Heure',
+        widget=forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Heure'}))
+    
+    class Meta:
+        model = Session
+        fields = ['date', 'hour']
