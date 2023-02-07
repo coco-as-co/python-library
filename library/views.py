@@ -3,8 +3,7 @@ from django.http import HttpResponse, HttpResponseNotFound
 from django.contrib import messages
 from .forms import SignUpForm , BookForm , Book , Library, LibraryForm, Book_User , BookLibraryForm , ProfileForm, User, GroupForm, Group, SessionForm
 from .models import Library, Session, User_Group
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 def index(request):
     if request.user.is_authenticated:
@@ -328,11 +327,12 @@ def add_session(request, group_id):
             if request.method == 'POST':
                 form = SessionForm(request.POST)
                 if form.is_valid():
-                    form.instance.group = group
-                    form.save()
-                    messages.success(request, 'Session added successfully')
+                    if form.instance.date >= datetime.date(datetime.now() + timedelta(days=1)):
+                        form.instance.group = group
+                        form.save()
+                        messages.success(request, 'Session added successfully')
 
-                    return redirect('detail_group', group_id)
+                        return redirect('detail_group', group_id)
             else:
                 form = SessionForm()
             
@@ -349,10 +349,11 @@ def edit_session(request, group_id, session_id):
             if request.method == 'POST':
                 form = SessionForm(request.POST,instance=session)
                 if form.is_valid():
-                    form.save()
-                    messages.success(request, 'Session updated successfully')
+                    if form.instance.date >= datetime.date(datetime.now() + timedelta(days=1)):
+                        form.save()
+                        messages.success(request, 'Session updated successfully')
 
-                    return redirect('detail_group', group_id)
+                        return redirect('detail_group', group_id)
             else:
                 form = SessionForm(instance=session)
             

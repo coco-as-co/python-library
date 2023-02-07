@@ -128,7 +128,7 @@ class GroupForm(forms.ModelForm):
 
 class SessionForm(forms.ModelForm):
     date = forms.DateField(required=True, label='Date',
-        widget=AdminDateWidget(attrs={'class': 'form-control', 'type': 'date', 'min': (datetime.datetime.now() + datetime.timedelta(days=1, hours=3)).strftime("%Y-%m-%d"), 'placeholder': 'Date'}))
+        widget=AdminDateWidget(attrs={'class': 'form-control', 'type': 'date', 'min': (datetime.datetime.now() + datetime.timedelta(days=1)).strftime("%Y-%m-%d"), 'placeholder': 'Date'}))
     hour = forms.TimeField(required=True, label='Heure',
         widget=AdminTimeWidget(attrs={'class': 'form-control', 'type': 'time', 'placeholder': 'Heure'}))
     
