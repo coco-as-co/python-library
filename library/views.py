@@ -195,8 +195,9 @@ def book_list(request):
             for lib in library_list:
                 books.extend(Book.objects.filter(library = lib.id))
 
-        keyword = request.GET.get('search').strip()
+        keyword = request.GET.get('search')
         if keyword:
+          keyword = keyword.strip()
           books = books.filter(
             Q(title__icontains=keyword) |
             Q(author__icontains=keyword) |
