@@ -2,7 +2,8 @@ from django.db import models
 from django.conf import settings
 from datetime import datetime
 USER = settings.AUTH_USER_MODEL
-
+from django.utils import timezone
+now = timezone.now()
 
 
 
@@ -42,6 +43,9 @@ class Book_User(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def compare_date(self):
+        if(self.returned_at < now):
+            return True
 # FORUM
 
 
