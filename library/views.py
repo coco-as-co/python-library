@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
+from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseNotFound
 from django.contrib import messages
-from .forms import SignUpForm , BookForm , Book , Library, LibraryForm, Book_User , BookLibraryForm , ProfileForm, User, GroupForm, Group, SessionForm
-from .models import Library, Session, User_Group
+from .forms import SignUpForm , BookForm , Book , Library, LibraryForm, Book_User , BookLibraryForm , ProfileForm, User, GroupForm, Group, SessionForm, SalonForm
+from .models import Library, Session, User_Group, Salon, Message
 from datetime import datetime, timedelta
 
 def index(request):
@@ -372,3 +373,42 @@ def delete_session(request, group_id, session_id):
 
         return redirect('detail_group', group_id)
     return HttpResponseNotFound('<h1>Page not found</h1>')
+def salons(request):
+    if request.user.is_authenticated:
+        salons = Salon.objects.all()
+        messages = Message.objects.filter(salon__in=salons)
+        for salon in salons:
+            salon.messages = messages.filter(salon=salon.id)
+            
+        context = {'salons': salons, 'messages': messages}
+        return render(request, 'salon/index.html', context)
+    return HttpResponseNotFound('<h1>Page not found</h1>')
+
+def detail_salon(request, salon_id):
+    if request.user.is_authenticated == False:
+        return HttpResponseNotFound('<h1>Page not found</h1>')
+    
+    salon = Salon.objects.get(id=salon_id)
+
+    messages = Message.objects.filter(salon=salon_id)
+    paginator = Paginator(messages, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    if request.method == 'POST':
+        form = SalonForm(request.POST)
+        if form.is_valid():
+            form.instance.user = request.user
+            form.instance.salon = salon
+            form.save()
+
+            # Return to the last page
+            messages = Message.objects.filter(salon=salon_id)
+            paginator = Paginator(messages, 5)
+            page_number = paginator.num_pages
+            page_obj = paginator.get_page(page_number)
+    else:
+        form = SalonForm()
+
+    context = {'form': form, 'salon': salon, 'messages': messages, 'page_obj': page_obj}
+    return render(request, 'salon/salon.html', context)
