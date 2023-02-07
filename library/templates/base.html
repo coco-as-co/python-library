@@ -24,16 +24,19 @@
             <a class="nav-link" href="{% url 'libraries' %}">Bibliothèques</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'book_list' %}">Listes des livres </a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" href="{% url 'book' %}">Mes livres</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'groups' %}">Mes groupes</a>
           </li>
+          <li class="nav-item d-flex align-content-center flex-column justify-content-center">
+          <div class="vr h-50 bg-light mx-3"></div>
+        </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'salons' %}">Salons</a>
+            <a class="nav-link" href="{% url 'book_list' %}">Listes des livres </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'salons' %}">Salons de discussion</a>
           </li>
         </ul>
         <ul class="navbar-nav mb-2 mb-lg-0">

@@ -145,12 +145,13 @@ class BookForm(forms.ModelForm):
         label="Genre",
         widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Genre"}),
     )
-    duration_max = forms.CharField(
-        max_length=80,
+    duration_max = forms.IntegerField(
+        max_value=730,
+        min_value=1,
         required=True,
         label="Durée max en jours",
-        widget=forms.TextInput(
-            attrs={"class": "form-control", "placeholder": "Durée max"}
+        widget=forms.NumberInput(
+            attrs={"class": "form-control", "placeholder": "Durée max", "value": 1}
         ),
     )
     jacket = forms.ImageField(
@@ -192,7 +193,6 @@ class BookLibraryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         library = kwargs.pop('lib_id',None)
         super(BookLibraryForm, self).__init__(*args, **kwargs)
-
         self.fields['library'].queryset = Library.objects.filter(id=library)
         self.fields['library'].widget.attrs['disabled'] = True
         self.fields['library'].initial = library
@@ -248,7 +248,6 @@ class SessionForm(forms.ModelForm):
             "date": AdminDateWidget,
             "hour": AdminTimeWidget
         }
-        fields = ["name", "city", "address"]
 
 class SalonForm(forms.ModelForm):
     content = forms.CharField(

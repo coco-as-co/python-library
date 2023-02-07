@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseNotFound
 from django.contrib import messages
-from .forms import SignUpForm , BookForm , Book , Library, LibraryForm, Book_User , BookLibraryForm , ProfileForm, User, GroupForm, Group, SessionForm, SalonForm
-from .models import Library, Session, User_Group, Salon, Message
+from .forms import SignUpForm , BookForm, LibraryForm, Book_User , BookLibraryForm , ProfileForm, GroupForm, SessionForm, SalonForm, User
+from .models import Library, Session, User_Group, Salon, Message, Group, Book, Book_User
 from datetime import datetime, timedelta
 
 def index(request):
