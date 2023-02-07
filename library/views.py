@@ -319,17 +319,7 @@ def sessions(request, group_id):
 
         if exists:
             sessions = Session.objects.filter(group = group_id)
-            return render(request, 'profile/sessions.html', {'sessions': sessions})
-
-    return HttpResponseNotFound('<h1>Page not found</h1>')
-
-def detail_session(request, id):
-    if request.user.is_authenticated:
-        session = Session.objects.get(id=id)
-        exist = User_Group.objects.filter(user = request.user.id, group = session.group.id).exists()
-
-        if exist:
-            return render(request, 'profile/detail_session.html', {'session': session})
+            return render(request, 'group/session/index.html', {'sessions': sessions, 'group_id': group_id})
 
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
@@ -349,7 +339,7 @@ def add_session(request, group_id):
                 form = SessionForm()
             
             context = {'form': form}
-            return render(request, 'profile/add_session.html',context)
+            return render(request, 'group/session/add.html',context)
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
 def edit_session(request, group_id, session_id):
@@ -368,8 +358,8 @@ def edit_session(request, group_id, session_id):
             else:
                 form = SessionForm(instance=session)
             
-            context = {'form': form}
-            return render(request, 'profile/edit_session.html',context)
+            context = {'form': form, 'session': session}
+            return render(request, 'group/session/edit.html',context)
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
 def delete_session(request, group_id, session_id):

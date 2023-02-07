@@ -1,10 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from .models import Book
-from .models import Library
-from .models import Book_User
-from .models import Group
+from .models import Book, Book_User, Library, Session, Group
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(label="Pseudo",
