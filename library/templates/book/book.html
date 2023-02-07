@@ -75,24 +75,22 @@
                 {% for books in book.book_user_set.all %}
                 <span class="">{{ books.borrowed_at|date:"d/m/Y" }}</span>
                 {% endfor %}
-                <!-- {% for books in book.book_user_set.all %}
-                |{{books.returned_at|date:"d/m/Y"}}
-                {% if books.retuned_at.is_past_due %}
-                <span class="text-danger">{{ books.returned_at|date:"d/m/Y" }}</span>
-                {% else %}
-                <span class="text-success">{{ books.returned_at|date:"d/m/Y" }}</span>
-                {% endif %}
-                {% endfor %} -->
+                
             </td>
             <td>
                 {% for books in book.book_user_set.all %}
+                {% if books.compare_date %}
+                <span class="text-danger fw-bold">{{ books.returned_at|date:"d/m/Y" }}</span>
+                {% else %}
                 <span class="">{{ books.returned_at|date:"d/m/Y" }}</span>
+                {% endif %}
                 {% endfor %}
             </td>
             <td>
                 {% for books in book.book_user_set.all %}
                 <span class="">{{ books.user.username }}</span>
                 {% endfor %}
+                
             </td>
             <td>
             {% if book.book_user_set.all %}
