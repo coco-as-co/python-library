@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
 from django.contrib import messages
-from .forms import SignUpForm , BookForm , Book , Library, LibraryForm, Book_User , BookLibraryForm , ProfileForm, User
+from .forms import SignUpForm , BookForm , Book , Library, LibraryForm, Book_User , BookLibraryForm , ProfileForm, User, GroupForm, Group
 from .models import Library
 from datetime import datetime
 from datetime import timedelta
@@ -242,4 +242,71 @@ def editProfile(request, id):
         
         context = {'form': form}
         return render(request, 'profile/edit.html',context)
+def groups(request):
+    if request.user.is_authenticated:
+        groups = Group.objects.all().exclude(owner=request.user)
+        myGroups = Group.objects.filter(owner=request.user)
+
+        context = {'groups': groups, 'myGroups': myGroups}
+
+        return render(request, 'group/index.html', context)
+    return HttpResponseNotFound('<h1>Page not found</h1>')
+
+def add_group(request):
+    if request.user.is_authenticated == False:
+        return HttpResponseNotFound('<h1>Page not found</h1>')
+    
+    if request.method == 'POST':
+        form = GroupForm(request.POST)
+        if form.is_valid():
+            form.instance.owner = request.user
+            form.save()
+            messages.success(request, 'Group created successfully')
+
+            return redirect('detail_group', form.instance.id)
+    else:
+        form = GroupForm()
+
+    context = {'form': form}
+    return render(request, 'group/add.html', context)
+
+def detail_group(request, group_id):
+    if request.user.is_authenticated:
+        group = Group.objects.get(id=group_id)
+        context = {'group': group}
+        return render(request, 'group/detail.html', context)
+    return HttpResponseNotFound('<h1>Page not found</h1>')
+
+def edit_group(request, group_id):
+    if request.user.is_authenticated:
+        group = Group.objects.get(id=group_id)
+
+        if group.owner != request.user:
+            return redirect('groups')
+
+        if request.method == 'POST':
+            form = GroupForm(request.POST, instance=group)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Group updated successfully')
+
+                return redirect('detail_group', group_id=group_id)
+        else:
+            form = GroupForm(instance=group)
+
+        context = {'form': form, 'name': group.name}
+        return render(request, 'group/edit.html', context)
+    return HttpResponseNotFound('<h1>Page not found</h1>')
+
+def delete_group(request, group_id):
+    if request.user.is_authenticated:
+        group = Group.objects.get(id=group_id)
+
+        if group.owner != request.user:
+            return redirect('groups')
+
+        group.delete()
+        messages.success(request, 'Group deleted successfully')
+
+        return redirect('groups')
     return HttpResponseNotFound('<h1>Page not found</h1>')

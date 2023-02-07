@@ -21,5 +21,10 @@ urlpatterns = [
     path('book/delete/<int:id>', views.deleteBook, name='deleteBook'),
     path('profile', views.profile, name='profile'),
     path('profile/edit/<int:id>', views.editProfile, name='editProfile'),
+    path('group/', views.groups, name='groups'),
+    path('group/add/', views.add_group, name='add_group'),
+    path('group/<int:group_id>/', views.detail_group, name='detail_group'),
+    path('group/edit/<int:group_id>/', views.edit_group, name='edit_group'),
+    path('group/delete/<int:group_id>/', views.delete_group, name='delete_group'),
 ]
 
