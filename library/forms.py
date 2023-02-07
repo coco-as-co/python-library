@@ -71,7 +71,7 @@ class BookForm(forms.ModelForm):
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
-        user =  kwargs.pop('userId',None)
+        user =  kwargs.pop('user_id',None)
         super(BookForm, self).__init__(*args, **kwargs)
 
         self.fields['library'].queryset = Library.objects.filter(owner=user)
@@ -90,7 +90,7 @@ class BookLibraryForm(forms.ModelForm):
     genre = forms.CharField(max_length=80, required=True, label='Genre',
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Genre'}))
     duration_max = forms.CharField(max_length=80,required=True, label='Durée max en jours',
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Durée max'}))
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Durée max', 'type': 'number'}))
     jacket = forms.FileField(required=False, label='Jaquette',
         widget=forms.FileInput(attrs={'class': 'form-control'}))
     class Meta:

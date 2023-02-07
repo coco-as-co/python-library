@@ -20,7 +20,7 @@
 
 <div class="col mb-3">
     <h1>Mes Livres
-        <a href="{% url 'addBook' %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i></a>
+        <a href="{% url 'add_book' %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i></a>
     </h1>
 </div>
 <div>
@@ -46,7 +46,7 @@
             <td colspan="10">Aucun livre</td>
         </tr>
         {% endif %}
-        {% for library in libraryList %}
+        {% for library in library_list %}
         <tr>
             <td colspan="14">{{ library.name }}</td>
         </tr>
@@ -94,12 +94,12 @@
             </td>
             <td>
             {% if book.book_user_set.all %}
-            <a href='{% url "returnBook" book.id %}' class='btn btn-success'><i class="bi bi-hand-thumbs-up"></i></a>
+            <a href='{% url "return_book" book.id %}' class='btn btn-success'><i class="bi bi-hand-thumbs-up"></i></a>
             {% endif %}
         
         </td>
-            <td><a href="{% url 'editBook' book.id %}" class="btn btn-warning"><i class="bi bi-pencil"></i></a></td>
-            <td><a href="{% url 'deleteBook' book.id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a></td>
+            <td><a href="{% url 'edit_book' book.id %}" class="btn btn-warning"><i class="bi bi-pencil"></i></a></td>
+            <td><a href="{% url 'delete_book' book.id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a></td>
             {% endif %}
         </tr>
 

@@ -33,9 +33,9 @@ def home(request):
 def libraries(request):
     if request.user.is_authenticated:
         libraries = Library.objects.all().exclude(owner=request.user)
-        myLibraries = Library.objects.filter(owner=request.user)
+        my_libraries = Library.objects.filter(owner=request.user)
 
-        context = {'libraries': libraries, 'myLibraries': myLibraries}
+        context = {'libraries': libraries, 'myLibraries': my_libraries}
 
         return render(request, 'library/index.html', context)
     return HttpResponseNotFound('<h1>Page not found</h1>')
@@ -108,15 +108,15 @@ def add_book_library(request, library_id):
             return redirect('libraries')
 
         if request.method == 'POST':
-            form = BookLibraryForm(request.POST, request.FILES, libraryId = library.id)
+            form = BookLibraryForm(request.POST, request.FILES, lib_id = library_id)
             if form.is_valid():
                 form.instance.library = library
                 form.save()
                 messages.success(request, 'Book added successfully')
 
-                return redirect('detail_library', library_id=library_id)
+                return redirect('detail_library', library_id)
         else:
-            form = BookLibraryForm(libraryId = library.id)
+            form = BookLibraryForm(lib_id = library_id)
             form.instance.library = library
 
         context = {'form': form, 'library': library}
@@ -125,75 +125,78 @@ def add_book_library(request, library_id):
 
 def book(request):
     if request.user.is_authenticated :
-        libraryList = Library.objects.filter(owner=request.user.id)
-        if(len(libraryList) == 0):
+        library_list = Library.objects.filter(owner=request.user.id)
+        if(len(library_list) == 0):
             books = []
         else:
             books = []
-            for lib in libraryList:
+            for lib in library_list:
                 books.extend(Book.objects.filter(library = lib.id))
         
         book_user = Book_User.objects.all().prefetch_related('book__book_user_set')
-        return render(request, 'book/book.html', {'books': books, 'libraryList': libraryList, 'book_user': book_user})
+        return render(request, 'book/book.html', {'books': books, 'library_list': library_list, 'book_user': book_user})
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
-def addBook(request):
+def add_book(request):
     if request.user.is_authenticated:
-            if request.method == 'POST':
-                
-                form = BookForm( request.POST,request.FILES,userId = request.user.id  )
-                if form.is_valid():
-                    form.save()
-                    messages.success(request, 'Book added successfully')
-
-                    return redirect('book')
-            else:
-                form = BookForm(userId = request.user.id)
-            
-            context = {'form': form}
-            return render(request, 'book/addBook.html',context)
-    return HttpResponseNotFound('<h1>Page not found</h1>')
-
-def editBook(request, id):
-    if request.user.is_authenticated:
-        book = Book.objects.get(id=id)
         if request.method == 'POST':
-            form = BookForm(request.POST,request.FILES,instance=book,userId = request.user.id)
+            
+            form = BookForm( request.POST,request.FILES,user_id = request.user.id  )
             if form.is_valid():
                 form.save()
-                messages.success(request, 'Book updated successfully')
+                messages.success(request, 'Book added successfully')
 
                 return redirect('book')
         else:
-            form = BookForm(instance=book,userId = request.user.id)
+            form = BookForm(user_id = request.user.id)
         
         context = {'form': form}
-        return render(request, 'book/editBook.html',context)
+        return render(request, 'book/add.html',context)
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
-def deleteBook(request, id):
+def edit_book(request, id):
     if request.user.is_authenticated:
         book = Book.objects.get(id=id)
-        book.delete()
-        messages.success(request, 'Book deleted successfully')
 
-        return redirect('book')
+        if book.library.owner == request.user:
+            if request.method == 'POST':
+                form = BookForm(request.POST,request.FILES,instance=book,user_id = request.user.id)
+                if form.is_valid():
+                    form.save()
+                    messages.success(request, 'Book updated successfully')
+
+                    return redirect('book')
+            else:
+                form = BookForm(instance=book,user_id = request.user.id)
+            
+            context = {'form': form}
+            return render(request, 'book/edit.html',context)
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
-def bookList(request):
+def delete_book(request, id):
     if request.user.is_authenticated:
-        libraryList = Library.objects.exclude(owner=request.user)
+        book = Book.objects.get(id=id)
+        if book.library.owner == request.user:
+            book.delete()
+            messages.success(request, 'Book deleted successfully')
+
+            return redirect('book')
+    return HttpResponseNotFound('<h1>Page not found</h1>')
+
+def book_list(request):
+    if request.user.is_authenticated:
+        library_list = Library.objects.exclude(owner=request.user)
         books = []
-        if(libraryList.count() == 1):
-            books = Book.objects.filter(library__in = libraryList)
+        if(library_list.count() == 1):
+            books = Book.objects.filter(library__in = library_list)
         else:
-            for lib in libraryList:
+            for lib in library_list:
                 books.extend(Book.objects.filter(library = lib.id))
         book_user = Book_User.objects.all().prefetch_related('book_user_set')
-        return render(request, 'book/bookList.html', {'books': books, 'book_users': book_user})
+        return render(request, 'book/list.html', {'books': books, 'book_users': book_user})
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
-def borrowBook(request, id):
+def borrow_book(request, id):
     if request.user.is_authenticated:
         book_user = Book_User()
         book = Book.objects.get(id=id)
@@ -204,11 +207,10 @@ def borrowBook(request, id):
         book_user.save()
         messages.success(request, 'Book borrowed successfully')
 
-        return redirect('bookList')
+        return redirect('book_list')
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
-
-def returnBook(request, id):
+def return_book(request, id):
     if request.user.is_authenticated:
         book_user = Book_User.objects.get(book=id)
         book_user.delete()
@@ -226,7 +228,7 @@ def profile(request):
         return render(request, 'profile/index.html', {'user': user, 'books': books, 'books_late': books_late})
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
-def editProfile(request, id):
+def edit_profile(request, id):
     if request.user.is_authenticated:
         user = User.objects.get(id=id)
         if request.method == 'POST':
