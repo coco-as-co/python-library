@@ -227,9 +227,9 @@ def profile(request):
         return render(request, 'profile/index.html', {'user': user, 'books': books, 'books_late': books_late})
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
-def edit_profile(request, id):
+def edit_profile(request):
     if request.user.is_authenticated:
-        user = User.objects.get(id=id)
+        user = User.objects.get(id=request.user.id)
         if request.method == 'POST':
             form = ProfileForm(request.POST,instance=user)
             if form.is_valid():
