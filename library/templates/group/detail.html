@@ -10,6 +10,8 @@
       {% if group.owner == user %}
         <a href="{% url 'edit_group' group.id %}" class="btn btn-warning"><i class="bi bi-pencil"></i></a>
         <a href="{% url 'delete_group' group.id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a>
+      {% else %}
+        <a href="{% url 'leave_group' group.id %}" class="btn btn-danger"><i class="bi bi-x-lg"></i></a>
       {% endif %}
     </h1>
   </div>

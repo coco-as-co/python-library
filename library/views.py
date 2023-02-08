@@ -299,8 +299,11 @@ def detail_group(request, group_id):
         if exists or is_owner:
             sessions = Session.objects.filter(group = group_id)
 
-        context = {'group': group, 'sessions': sessions}
-        return render(request, 'group/detail.html', context)
+            context = {'group': group, 'sessions': sessions}
+            return render(request, 'group/detail.html', context)
+        
+        return redirect('groups')
+
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
 def edit_group(request, group_id):
@@ -333,6 +336,28 @@ def delete_group(request, group_id):
 
         group.delete()
         messages.success(request, 'Group deleted successfully')
+
+        return redirect('groups')
+    return HttpResponseNotFound('<h1>Page not found</h1>')
+
+def join_group(request, group_id):
+    if request.user.is_authenticated:
+        group = Group.objects.get(id=group_id)
+        user_group = User_Group()
+        user_group.user = request.user
+        user_group.group = group
+        user_group.save()
+        messages.success(request, 'Group joined successfully')
+
+        return redirect('detail_group', group_id)
+    return HttpResponseNotFound('<h1>Page not found</h1>')
+
+def leave_group(request, group_id):
+    if request.user.is_authenticated:
+        group = Group.objects.get(id=group_id)
+        user_group = User_Group.objects.filter(user = request.user.id, group = group_id).first()
+        user_group.delete()
+        messages.success(request, 'Group left successfully')
 
         return redirect('groups')
     return HttpResponseNotFound('<h1>Page not found</h1>')
