@@ -433,10 +433,11 @@ def detail_salon(request, salon_id):
     if request.user.is_authenticated == False:
         return HttpResponseNotFound('<h1>Page not found</h1>')
     
+    nbMsgByPage = 5
     salon = Salon.objects.get(id=salon_id)
 
     messages = Message.objects.filter(salon=salon_id)
-    paginator = Paginator(messages, 5)
+    paginator = Paginator(messages, nbMsgByPage)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -449,7 +450,7 @@ def detail_salon(request, salon_id):
 
             # Return to the last page
             messages = Message.objects.filter(salon=salon_id)
-            paginator = Paginator(messages, 5)
+            paginator = Paginator(messages, nbMsgByPage)
             page_number = paginator.num_pages
             page_obj = paginator.get_page(page_number)
     else:
