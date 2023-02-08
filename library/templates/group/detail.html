@@ -11,7 +11,7 @@
         <a href="{% url 'edit_group' group.id %}" class="btn btn-warning"><i class="bi bi-pencil"></i></a>
         <a href="{% url 'delete_group' group.id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a>
       {% else %}
-        <a href="{% url 'leave_group' group.id %}" class="btn btn-danger"><i class="bi bi-x-lg"></i></a>
+        <a href="{% url 'leave_group' group.id %}" class="btn btn-danger"><i class="bi bi-person-dash"></i></a>
       {% endif %}
     </h1>
   </div>
@@ -40,9 +40,11 @@
               <div class="card-body">
                   <h5 class="card-title">{{ session.date|date:"d/m/Y" }}</h5>
                   <p class="card-text">À : {{ session.hour|time:"H:i" }}</p>
+              </div>
+              <div class="d-flex justify-content-end card-footer">
                   {% if group.owner == user %}
                     <a href="{% url 'edit_session' group.id session.id %}" class="btn btn-warning"><i class="bi bi-pencil"></i></a>
-                    <a href="{% url 'delete_session' group.id session.id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a>
+                    <a href="{% url 'delete_session' group.id session.id %}" class="btn btn-danger ms-2"><i class="bi bi-trash"></i></a>
                   {% endif %}
               </div>
           </div>

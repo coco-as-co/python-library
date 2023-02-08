@@ -14,8 +14,8 @@
 
 {% endif %}
 
-<form method="get" style="width:80%!important;display:flex!important;flex-flow: row wrap;" class="mb-5 form-inline">
-    <input  value="{{ request.GET.search }}" style="display:inline-block;width:85%" class="form-control  mr-sm-2 mr-2" type="search" placeholder="Recherche"
+<form method="get" class="mb-5 form-inline mx-auto d-flex" style="width:80%">
+    <input  value="{{ request.GET.search }}" class="form-control flex-fill mr-sm-2 mr-2" type="search" placeholder="Recherche"
         aria-label="Search" name="search">
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Recherche</button>
 </form>

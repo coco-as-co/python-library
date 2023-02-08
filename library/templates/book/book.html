@@ -24,31 +24,34 @@
     </h1>
 </div>
 <div>
-    <table id="table_book" class="table table-bordered text-center">
+    <table id="table_book" class="table table-bordered table-hover text-center rounded-top-3 w-100 overflow-hidden">
+        <thead class="table-dark">
         <tr>
-            <th>Titre</th>
-            <th>Auteur</th>
-            <th>Editeur</th>
-            <th>Collection</th>
-            <th>Genre</th>
-            <th>Image</th>
-            <th>Durée maximum emprunt</th>
-            <th>Emprunt ?</th>
-            <th>Emprunter le : </th>
-            <th>A rendre le : </th>
-            <th>Par : </th>
-            <th>Rendu ?</th>
-            <th>Edition</th>
-            <th>Suppression</th>
+            <th scope="col">Titre</th>
+            <th scope="col">Auteur</th>
+            <th scope="col">Editeur</th>
+            <th scope="col">Collection</th>
+            <th scope="col">Genre</th>
+            <th scope="col">Image</th>
+            <th scope="col">Durée maximum emprunt</th>
+            <th scope="col">Emprunt ?</th>
+            <th scope="col">Emprunter le : </th>
+            <th scope="col">A rendre le : </th>
+            <th scope="col">Par : </th>
+            <th scope="col">Rendu ?</th>
+            <th scope="col">Edition</th>
+            <th scope="col">Suppression</th>
         </tr>
+        </thead>
+        <tbody>
         {% if books|length_is:"0" %}
         <tr>
             <td colspan="10">Aucun livre</td>
         </tr>
         {% endif %}
         {% for library in library_list %}
-        <tr>
-            <td colspan="14">{{ library.name }}</td>
+        <tr class="table-secondary">
+            <td colspan="14" class="h5">{{ library.name }}</td>
         </tr>
         {% for book in books %}
         <tr class="text-justify align-middle">
@@ -105,7 +108,7 @@
 
         {% endfor %}
         {% endfor %}
-
+        </tbody>
     </table>
 
 

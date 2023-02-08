@@ -7,7 +7,19 @@
 
 {% endif %}
 
-<h2>Welcome {{ user.username }}</h2>
-<a href="{% url 'logout' %}">Se déconnecter</a>
-
+<div class="container my-5">
+  <h1 class="text-center">Bienvenue sur Le Bon Libraire</h1>
+  <p class="text-center">Vous êtes connecté en tant que {{ user.username }}.</p>
+  <div class="row row-cols-4 my-5">
+    <div class="col-md-4 text-center">
+      <a href="{% url 'libraries' %}" class="btn btn-primary">Bibliothèques</a>
+    </div>
+    <div class="col-md-4 text-center">
+      <a href="{% url 'book_list' %}" class="btn btn-success">Livres</a>
+    </div>
+    <div class="col-md-4 text-center">
+      <a href="{% url 'groups' %}" class="btn btn-info">Groupes</a>
+    </div>
+  </div>
+</div>
 {% endblock %}
