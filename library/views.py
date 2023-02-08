@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseNotFound
 from django.db.models import Q
+from django.utils import timezone
 
 from django.contrib import messages
 from .forms import SignUpForm , BookForm, LibraryForm, Book_User , BookLibraryForm , ProfileForm, GroupForm, SessionForm, SalonForm, User
@@ -29,7 +30,20 @@ def register(request):
 
 def home(request):
     if request.user.is_authenticated:
-        return render(request, './home.html')
+        user_group = User_Group.objects.filter(user=request.user)
+        groups = Group.objects.filter(user_group__in=user_group)
+        sessions = Session.objects.filter(group__in=groups, date__gte=datetime.now())
+        
+        # get all borrowed books by the user
+        borrowed_books = Book_User.objects.filter(user=request.user, returned_at__isnull=True)
+        for borrowed_book in borrowed_books:
+            borrowed_book.returned_at = borrowed_book.borrowed_at + timedelta(days=borrowed_book.book.duration_max)
+            borrowed_book.isLate = False
+            if borrowed_book.returned_at < timezone.now():
+                borrowed_book.isLate = True
+
+        context = {'sessions': sessions, 'borrowed_books': borrowed_books}
+        return render(request, './home.html', context)
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
 def libraries(request):
@@ -136,6 +150,9 @@ def book(request):
                 books.extend(Book.objects.filter(library = lib.id))
         
         book_user = Book_User.objects.all().prefetch_related('book__book_user_set')
+        for book in book_user:
+            book.returned_at = book.borrowed_at + timedelta(days = book.book.duration_max)
+
         return render(request, 'book/book.html', {'books': books, 'library_list': library_list, 'book_user': book_user})
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
@@ -220,7 +237,6 @@ def borrow_book(request, id):
         book_user.book = book
         book_user.user = request.user
         book_user.borrowed_at = datetime.now()
-        book_user.returned_at = datetime.now() +  timedelta(days = book.duration_max)
         book_user.save()
         messages.success(request, 'Book borrowed successfully')
 
