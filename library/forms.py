@@ -151,7 +151,7 @@ class BookForm(forms.ModelForm):
         required=True,
         label="Durée max en jours",
         widget=forms.NumberInput(
-            attrs={"class": "form-control", "placeholder": "Durée max", "value": 1}
+            attrs={"class": "form-control", "placeholder": "Durée max", "value": 1, "min": 1}
         ),
     )
     jacket = forms.ImageField(

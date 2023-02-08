@@ -144,7 +144,7 @@ def add_book(request):
         if request.method == 'POST':
             
             form = BookForm( request.POST,request.FILES,user_id = request.user.id  )
-            if form.is_valid():
+            if form.is_valid() and form.instance.duration_max > 0:
                 form.save()
                 messages.success(request, 'Book added successfully')
 
@@ -163,7 +163,7 @@ def edit_book(request, id):
         if book.library.owner == request.user:
             if request.method == 'POST':
                 form = BookForm(request.POST,request.FILES,instance=book,user_id = request.user.id)
-                if form.is_valid():
+                if form.is_valid() and form.instance.duration_max > 0:
                     form.save()
                     messages.success(request, 'Book updated successfully')
 
@@ -182,7 +182,7 @@ def delete_book(request, id):
             book.delete()
             messages.success(request, 'Book deleted successfully')
 
-            return redirect('book')
+            return redirect(request.META.get('HTTP_REFERER'))
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
 def book_list(request):
@@ -224,7 +224,7 @@ def borrow_book(request, id):
         book_user.save()
         messages.success(request, 'Book borrowed successfully')
 
-        return redirect('book_list')
+        return redirect(request.META.get('HTTP_REFERER'))
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
 def return_book(request, id):
@@ -233,7 +233,7 @@ def return_book(request, id):
         book_user.delete()
         messages.success(request, 'Book returned successfully')
 
-        return redirect('book')
+        return redirect(request.META.get('HTTP_REFERER'))
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
 def profile(request):
@@ -296,6 +296,9 @@ def detail_group(request, group_id):
         exists = User_Group.objects.filter(user = request.user.id, group = group_id).exists()
         is_owner = group.owner == request.user
 
+        print(exists)
+        print(is_owner)
+
         if exists or is_owner:
             sessions = Session.objects.filter(group = group_id)
 
@@ -349,7 +352,7 @@ def join_group(request, group_id):
         user_group.save()
         messages.success(request, 'Group joined successfully')
 
-        return redirect('detail_group', group_id)
+        return redirect(request.META.get('HTTP_REFERER'))
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
 def leave_group(request, group_id):
@@ -359,7 +362,7 @@ def leave_group(request, group_id):
         user_group.delete()
         messages.success(request, 'Group left successfully')
 
-        return redirect('groups')
+        return redirect(request.META.get('HTTP_REFERER'))
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
 def add_session(request, group_id):
