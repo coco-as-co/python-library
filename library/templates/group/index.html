@@ -43,7 +43,14 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ group.name }}</h5>
                         <p class="card-text">{{ group.city }}</p>
-                        <a href="{% url 'detail_group' group.id %}" class="btn btn-success">Voir</a>
+                    </div>
+                    <div class="card-footer">
+                        {% if group.user_group_set.all %}
+                            <a href="{% url 'detail_group' group.id %}" class="btn btn-primary">Voir</a>
+                            <a href="{% url 'leave_group' group.id %}" class="btn btn-secondary">Quitter</a>
+                        {% else %}
+                            <a href="{% url 'join_group' group.id %}" class="btn btn-success">Rejoindre</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
