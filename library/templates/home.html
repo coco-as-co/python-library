@@ -33,7 +33,7 @@
       <div class="card">
         <div class="card-header">
           <h5 class="card-title">{{ borrowed_book.book.title }}
-            {% if borrowed_book.isLate %}
+            {% if borrowed_book.returnedDateExceeded %}
             <span class="text-danger">
               <i class="bi bi-exclamation-triangle"></i> 
                 En retard de rendu 
@@ -49,7 +49,7 @@
           <p class="card-text">Collection : {{ borrowed_book.book.collection }}</p>
           <p class="card-text">Genre : {{ borrowed_book.book.genre }}</p>
           <p class="card-text">Date d'emprunt : {{ borrowed_book.borrowed_at|date:"d/m/y" }}</p>
-          <p class="card-text text-bg-info rounded p-1">Date de retour : {{ borrowed_book.returned_at|date:"d/m/y" }}
+          <p class="card-text text-bg-info rounded p-1">Date de retour : {{ borrowed_book.returnedAt|date:"d/m/y" }}
           </p>
         </div>
       </div>

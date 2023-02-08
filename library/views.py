@@ -36,12 +36,7 @@ def home(request):
         
         # get all borrowed books by the user
         borrowed_books = Book_User.objects.filter(user=request.user, returned_at__isnull=True)
-        for borrowed_book in borrowed_books:
-            borrowed_book.returned_at = borrowed_book.borrowed_at + timedelta(days=borrowed_book.book.duration_max)
-            borrowed_book.isLate = False
-            if borrowed_book.returned_at < timezone.now():
-                borrowed_book.isLate = True
-
+        
         context = {'sessions': sessions, 'borrowed_books': borrowed_books}
         return render(request, './home.html', context)
     return HttpResponseNotFound('<h1>Page not found</h1>')
@@ -150,8 +145,7 @@ def book(request):
                 books.extend(Book.objects.filter(library = lib.id))
         
         book_user = Book_User.objects.all().prefetch_related('book__book_user_set')
-        for book in book_user:
-            book.returned_at = book.borrowed_at + timedelta(days = book.book.duration_max)
+
 
         return render(request, 'book/book.html', {'books': books, 'library_list': library_list, 'book_user': book_user})
     return HttpResponseNotFound('<h1>Page not found</h1>')
