@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseNotFound
 from django.db.models import Q
+from django.utils import timezone
 
 from django.contrib import messages
 from .forms import SignUpForm , BookForm, LibraryForm, Book_User , BookLibraryForm , ProfileForm, GroupForm, SessionForm, SalonForm, User
@@ -29,7 +30,15 @@ def register(request):
 
 def home(request):
     if request.user.is_authenticated:
-        return render(request, './home.html')
+        user_group = User_Group.objects.filter(user=request.user)
+        groups = Group.objects.filter(user_group__in=user_group)
+        sessions = Session.objects.filter(group__in=groups, date__gte=datetime.now())
+        
+        # get all borrowed books by the user
+        borrowed_books = Book_User.objects.filter(user=request.user, returned_at__isnull=True)
+        
+        context = {'sessions': sessions, 'borrowed_books': borrowed_books}
+        return render(request, './home.html', context)
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
 def libraries(request):
@@ -136,6 +145,8 @@ def book(request):
                 books.extend(Book.objects.filter(library = lib.id))
         
         book_user = Book_User.objects.all().prefetch_related('book__book_user_set')
+
+
         return render(request, 'book/book.html', {'books': books, 'library_list': library_list, 'book_user': book_user})
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
@@ -220,7 +231,6 @@ def borrow_book(request, id):
         book_user.book = book
         book_user.user = request.user
         book_user.borrowed_at = datetime.now()
-        book_user.returned_at = datetime.now() +  timedelta(days = book.duration_max)
         book_user.save()
         messages.success(request, 'Book borrowed successfully')
 
@@ -433,10 +443,11 @@ def detail_salon(request, salon_id):
     if request.user.is_authenticated == False:
         return HttpResponseNotFound('<h1>Page not found</h1>')
     
+    nbMsgByPage = 5
     salon = Salon.objects.get(id=salon_id)
 
     messages = Message.objects.filter(salon=salon_id)
-    paginator = Paginator(messages, 5)
+    paginator = Paginator(messages, nbMsgByPage)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -449,7 +460,7 @@ def detail_salon(request, salon_id):
 
             # Return to the last page
             messages = Message.objects.filter(salon=salon_id)
-            paginator = Paginator(messages, 5)
+            paginator = Paginator(messages, nbMsgByPage)
             page_number = paginator.num_pages
             page_obj = paginator.get_page(page_number)
     else:

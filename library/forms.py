@@ -253,6 +253,7 @@ class SalonForm(forms.ModelForm):
     content = forms.CharField(
         required=True,
         label="Message",
+        max_length=3000,
         widget=forms.Textarea(attrs={"class": "form-control", "rows": 3}),
     )
 

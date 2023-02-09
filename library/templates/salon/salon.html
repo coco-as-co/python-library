@@ -4,9 +4,13 @@
 {% block title %}Salon{% endblock %}
 
 {% block content %}
-<h1 class="mb-4">{{ salon.title }}</h1>
+<div class="row mb-4">
+    <div class="col text-start"><h1>{{ salon.title }}</h1></div>
+    <div class="col text-end"> <a href="{% url 'detail_salon' salon_id=salon.id %}?page={{ page_obj.paginator.num_pages }}" type="button" class="btn btn-success">Rafraichir les messages</a></div>
+</div>
+
 <div class="messages">
-    {% for message in page_obj %}
+  {% for message in page_obj %}
     <div class="message rounded p-3 {% if forloop.counter0|divisibleby:'2' %} bg-colored {% endif %} ">
         <div class="message-header text-secondary">
             <div class="message-author">De {{ message.user.username }}</div>
@@ -33,7 +37,7 @@
         {% endif %}
         {% endif %}
 
-        {% if page_obj.number > 2 %}
+        {% if page_obj.number > 3 %}
         <li class="page-item"><a class="page-link" href="#">...</a></li>
         {% endif %}
 

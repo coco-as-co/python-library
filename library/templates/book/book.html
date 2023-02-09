@@ -82,10 +82,10 @@
             </td>
             <td>
                 {% for books in book.book_user_set.all %}
-                {% if books.compare_date %}
-                <span class="text-danger fw-bold">{{ books.returned_at|date:"d/m/Y" }}</span>
+                {% if books.returnedDateExceeded %}
+                <span class="text-danger fw-bold">{{ books.returnedAt|date:"d/m/Y" }}</span>
                 {% else %}
-                <span class="">{{ books.returned_at|date:"d/m/Y" }}</span>
+                <span class="">{{ books.returnedAt|date:"d/m/Y" }}</span>
                 {% endif %}
                 {% endfor %}
             </td>
