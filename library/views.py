@@ -35,7 +35,7 @@ def home(request):
         sessions = Session.objects.filter(group__in=groups, date__gte=datetime.now())
         
         # get all borrowed books by the user
-        borrowed_books = Book_User.objects.filter(user=request.user, returned_at__isnull=True)
+        borrowed_books = Book_User.objects.filter(user=request.user)
         
         context = {'sessions': sessions, 'borrowed_books': borrowed_books}
         return render(request, './home.html', context)
@@ -146,7 +146,6 @@ def book(request):
         
         book_user = Book_User.objects.all().prefetch_related('book__book_user_set')
 
-
         return render(request, 'book/book.html', {'books': books, 'library_list': library_list, 'book_user': book_user})
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
@@ -231,6 +230,8 @@ def borrow_book(request, id):
         book_user.book = book
         book_user.user = request.user
         book_user.borrowed_at = datetime.now()
+        book_user.returned_at = datetime.now() +  timedelta(days = book.duration_max)
+
         book_user.save()
         messages.success(request, 'Book borrowed successfully')
 
