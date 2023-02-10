@@ -42,11 +42,11 @@ class Book_User(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def returnedDateExceeded(self):
-        if(self.borrowed_at + timedelta(days=self.book.duration_max) < now):
+    def is_returned_date_exceeded(self):
+        if(self.returned_at < now):
             return True
-    def returnedAt(self):
-        return self.borrowed_at + timedelta(days=self.book.duration_max)
+
+
 # FORUM
 
 
