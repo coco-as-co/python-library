@@ -1,0 +1,119 @@
+{% extends "../base.html" %}
+
+{% block title %}Book{% endblock %}
+{% load static %}
+<style>
+    table {
+        border-collapse: collapse
+    }
+
+    td {
+        border: 1px solid black;
+        padding: 10px;
+    }
+</style>
+
+{% block content %}
+{% if form.errors %}
+
+{% endif %}
+
+<div class="col mb-3">
+    <h1>Mes Livres
+        <a href="{% url 'add_book' %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i></a>
+    </h1>
+</div>
+<div>
+    <table id="table_book" class="table table-bordered table-hover text-center rounded-top-3 w-100 overflow-hidden">
+        <thead class="table-dark">
+        <tr>
+            <th scope="col">Titre</th>
+            <th scope="col">Auteur</th>
+            <th scope="col">Editeur</th>
+            <th scope="col">Collection</th>
+            <th scope="col">Genre</th>
+            <th scope="col">Image</th>
+            <th scope="col">Durée maximum emprunt</th>
+            <th scope="col">Emprunt ?</th>
+            <th scope="col">Emprunter le : </th>
+            <th scope="col">A rendre le : </th>
+            <th scope="col">Par : </th>
+            <th scope="col">Rendu ?</th>
+            <th scope="col">Edition</th>
+            <th scope="col">Suppression</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if books|length_is:"0" %}
+        <tr>
+            <td colspan="10">Aucun livre</td>
+        </tr>
+        {% endif %}
+        {% for library in library_list %}
+        <tr class="table-secondary">
+            <td colspan="14" class="h5">{{ library.name }}</td>
+        </tr>
+        {% for book in books %}
+        <tr class="text-justify align-middle">
+            {% if book.library == library %}
+            <td>{{ book.title }}</td>
+            <td>{{ book.author }}</td>
+            <td>{{ book.editor }}</td>
+            <td>{{ book.collection }}</td>
+            <td>{{ book.genre }}</td>
+            {% if book.jacket %}
+            <td><img src="{{ book.jacket.url }}" width="30px"> </td>
+            {% else %}
+            <td></td>
+            {% endif %}
+            <td>{{ book.duration_max }} jours</td>
+            <td>
+                {% if book.book_user_set.all %}
+                <i style="font-size: 1.5rem;" class="text-success bi bi-check-lg"></i>
+                {% else %}
+                <i style="font-size: 1.5rem;" class="text-danger bi bi-x"></i>
+                {% endif %}
+            </td>
+            <td>
+                {% for books in book.book_user_set.all %}
+                <span class="">{{ books.borrowed_at|date:"d/m/Y" }}</span>
+                {% endfor %}
+                
+            </td>
+            <td>
+                {% for books in book.book_user_set.all %}
+                {% if books.is_returned_date_exceeded %}
+                <span class="text-danger fw-bold">{{ books.returned_at|date:"d/m/Y" }}</span>
+                {% else %}
+                <span class="">{{ books.returned_at|date:"d/m/Y" }}</span>
+                {% endif %}
+                {% endfor %}
+            </td>
+            <td>
+                {% for books in book.book_user_set.all %}
+                <span class="">{{ books.user.username }}</span>
+                {% endfor %}
+                
+            </td>
+            <td>
+            {% if book.book_user_set.all %}
+            <a href='{% url "return_book" book.id %}' class='btn btn-success'><i class="bi bi-hand-thumbs-up"></i></a>
+            {% endif %}
+        
+        </td>
+            <td><a href="{% url 'edit_book' book.id %}" class="btn btn-warning"><i class="bi bi-pencil"></i></a></td>
+            <td><a href="{% url 'delete_book' book.id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a></td>
+            {% endif %}
+        </tr>
+
+        {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+</div>
+
+
+
+{% endblock %}

@@ -12,4 +12,10 @@
 __pycache__
 db.sqlite3
 
+# WINDOWS CONFIG
+library_windows/
 .env
+
+#Image
+media/jacket/*
+media/images/*

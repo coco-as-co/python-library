@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Ajouter une bibliothèque{% endblock %}
+
+{% block content %}
+{% if form.errors %}
+  <p>Le formulaire contient des erreurs :</p>
+  <ul>
+    {% for field in form %}
+      {% for error in field.errors %}
+        <li>{{ field.label }} : {{ error }}</li>
+      {% endfor %}
+    {% endfor %}
+  </ul>
+{% endif %}
+
+<div class="card w-50 mx-auto">
+  <div class="card-header text-center">
+    <h1>Editer {{ name }}</h1>
+  </div>
+  <div class="card-body justify-content-center">
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="form-group mb-2">
+          <label for="{{ field.id_for_label }}">{{ field.label }} :</label>
+          {{ field }}
+        </div>
+      {% endfor %}
+      <div class="form-group mt-4 mb-2 text-center">
+        <button type="submit" class="btn btn-primary">Sauvegarder</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

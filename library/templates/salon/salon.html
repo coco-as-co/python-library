@@ -1,0 +1,85 @@
+{% extends '../base.html' %}
+{% load mathfilters %}
+
+{% block title %}Salon{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col text-start"><h1>{{ salon.title }}</h1></div>
+    <div class="col text-end"> <a href="{% url 'detail_salon' salon_id=salon.id %}?page={{ page_obj.paginator.num_pages }}" type="button" class="btn btn-success">Rafraichir les messages</a></div>
+</div>
+
+<div class="messages">
+  {% for message in page_obj %}
+    <div class="message rounded p-3 {% if forloop.counter0|divisibleby:'2' %} bg-colored {% endif %} ">
+        <div class="message-header text-secondary">
+            <div class="message-author">De {{ message.user.username }}</div>
+            <div class="message-date">À {{ message.created_at|date:"d/m/Y à H:i" }}</div>
+        </div>
+        <hr class="hr" />
+        <div class="message-content">{{ message.content }}</div>
+    </div>
+    {% empty %}
+    <p>Il n'y a pas encore de messages dans ce salon.</p>
+    {% endfor %}
+</div>
+
+<nav aria-label="Page navigation example" class="mt-4">
+    <ul class="pagination justify-content-end">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% if page_obj.previous_page_number != 1 %}
+        <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+        {% endif %}
+        {% endif %}
+
+        {% if page_obj.number > 3 %}
+        <li class="page-item"><a class="page-link" href="#">...</a></li>
+        {% endif %}
+
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.number|add:"-1" }}">{{ page_obj.number|add:"-1" }}</a></li>
+        {% endif %}
+        <li class="page-item"><a class="page-link active" href="#">{{ page_obj.number }}</a></li>
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.number|add:"1"}}">{{ page_obj.number|add:"1"}}</a></li>
+        {% endif %}
+
+        {% if page_obj.paginator.num_pages|sub:page_obj.number > 2 %}
+        <li class="page-item"><a class="page-link" href="#">...</a></li>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+        {% if page_obj.next_page_number != page_obj.paginator.num_pages %}
+        <li class="page-item"><a class="page-link"
+                href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a></li>
+        {% endif %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+
+        {% endif %}
+    </ul>
+</nav>
+
+<form method="post" class="mt-5">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="form-group mb-2">
+        <label for="{{ field.id_for_label }}">{{ field.label }} :</label>
+        {{ field }}
+        {% endfor %}
+        <div class="form-group mb-2">
+            <div class="form-group mt-4 mb-2 text-center">
+                <button type="submit" class="btn btn-primary">Envoyer votre message</button>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

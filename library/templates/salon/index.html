@@ -1,0 +1,29 @@
+{% extends '../base.html' %}
+
+{% block title %}Salon{% endblock %}
+
+{% block content %}
+<div class="mt-5">
+    <h1>Salons</h1>
+
+    <div class="list-group">
+        {% for salon in salons %}
+        <div href="#" class="list-group-item list-group-item-action" aria-current="true">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{ salon }}</h5>
+                <small>Ouvert le {{ salon.created_at|date:"d/m/Y"}}</small>
+            </div>
+            <p class="mb-1">
+                {% if salon.messages|length %}
+                {{salon.messages|length}} messages
+                {% else %}
+                Aucun message
+                {% endif %}
+            </p>
+            <a href="{% url 'detail_salon' salon.id %}" class="btn btn-primary">Rentrer</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

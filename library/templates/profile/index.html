@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Créer un compte{% endblock %}
+
+{% block content %}
+{% if form.errors %}
+
+{% endif %}
+
+<div>
+    <div class="m-5">
+        <h2>Mon profil : <a href="{% url 'edit_profile' %}" class="btn btn-warning"><i class="bi bi-pencil"></i></a> </h2>
+        <div class="card ">
+            <div class="card-body">
+                <h5 class="card-title">{{user.username}}</h5>
+                <span>{{user.first_name}} - {{user.last_name}}</span>
+                <hr>
+                <span> {{user.email}}</span>
+                </h6>
+            </div>
+        </div>
+    </div>
+    <div class="m-5">
+        <h2>Mes livres en retard : </h2>
+        <div class="row row-cols-5 ">
+            {% for book_late in books_late %}
+            <div class="col">
+                <div class="card ">
+                    <img style="height: 200px ;object-fit: cover;" class="  img-thumbnail"
+                        src="{{book_late.book.jacket.url}}" alt="Card image cap">
+                    <div class="card-body bg-danger bg-opacity-50">
+                        <h5 class="card-title">{{book_late.book.title}}</h5>
+                        <span> {{book_late.book.library.address}} | {{book_late.book.library.city}}</span>
+                        <hr>
+                        <h6 class="fw-bold">A rendre pour le : {{book_late.returned_at|date:"d/m/y"}}
+                        </h6>
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="m-5">
+        <h2>Mes livres en cours d'emprunt : </h2>
+        <div class="row row-cols-5 ">
+            {% for book in books %}
+            <div class="col">
+                <div class="card">
+                    <img style="height: 200px ;object-fit: cover;" class="  img-thumbnail"
+                        src="{{book.book.jacket.url}}" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">{{book.book.title}}</h5>
+                        <span> {{book.book.library.address}} | {{book.book.library.city}}</span>
+                        <hr>
+                        <h6>A rendre pour le : {{book.returned_at|date:"d/m/y"}}</h6>
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

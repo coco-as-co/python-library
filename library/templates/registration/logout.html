@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Déconnecté{% endblock %}
+
+{% block content %}
+{% if form.errors %}
+
+{% endif %}
+
+<div class="card">
+  <div class="card-header">
+    <h2>Vous vous êtes déconnecté !</h2>
+  </div>
+  <div class="card-body">
+    <a href="{% url 'login' %}" class="btn btn-primary">Se reconnecter</a>
+  </div>
+</div>
+
+{% endblock %}
