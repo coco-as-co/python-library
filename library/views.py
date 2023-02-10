@@ -307,9 +307,6 @@ def detail_group(request, group_id):
         exists = User_Group.objects.filter(user = request.user.id, group = group_id).exists()
         is_owner = group.owner == request.user
 
-        print(exists)
-        print(is_owner)
-
         if exists or is_owner:
             sessions = Session.objects.filter(group = group_id)
 

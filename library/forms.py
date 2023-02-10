@@ -97,12 +97,6 @@ class ProfileForm(forms.ModelForm):
         model = User
         fields = [ 'email', 'first_name', 'last_name']
 
-# class LibrarySelect(forms.Select):
-#     def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
-#         option = super().create_option(name, value, label, selected, index, subindex, attrs)
-#         return option
-
-
 class BookForm(forms.ModelForm):
     title = forms.CharField(
         max_length=250,
