@@ -1,5 +1,3 @@
-# python-library
-
 # About
 
 Welcome to Le Bon Libraire !
