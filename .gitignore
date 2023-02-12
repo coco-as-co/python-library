@@ -19,3 +19,5 @@ library_windows/
 #Image
 media/jacket/*
 media/images/*
+!media/images/colorful.jpeg
+!media/images/spillways.png
