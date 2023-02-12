@@ -6,7 +6,7 @@ Le Bon Libraire is an online book sharing site.
 
 # To launch the project
 
-1. Install these lib on your machine `pip install django-mathfilters`
+1. Install these libs on your machine `pip install django-mathfilters` and `pip install django-dump-die`
 3. **Create database :** Run `python manage.py migrate` in the root directory
 4. **Load data :** Run `python manage.py loaddata data` in the root directory
 5. **Launch app :** Run `python manage.py runserver`
